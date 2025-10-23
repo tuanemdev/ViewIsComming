@@ -273,12 +273,18 @@ public struct EffectNameTransition: Transition {
 
 ### 3. Demo View (`Example/Example/Demo/[EffectName]View.swift`)
 
+**Important**: Demo views should allow real-time parameter adjustment using sliders and toggles, not multiple animation trigger buttons.
+
 ```swift
 import SwiftUI
 import ViewIsComming
 
 struct EffectNameView: View {
     @State private var showView = true
+    // Controls - add @State variables for each customizable parameter
+    @State private var customParam1: Double = 1.0
+    @State private var customParam2: Double = 2.0
+    @State private var boolParam: Bool = true
     
     var body: some View {
         ScrollView {
@@ -286,40 +292,71 @@ struct EffectNameView: View {
                 if showView {
                     Image(.haNoi)
                         .resizable()
-                        .transition(.effectName())
+                        .transition(
+                            .effectName(
+                                customParam1: customParam1,
+                                customParam2: customParam2,
+                                boolParam: boolParam
+                            )
+                        )
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
             .cornerRadius(20)
             
-            // Trigger Button
-            VStack(spacing: 15) {
-                Button("Toggle Views") {
-                    withAnimation(.easeInOut(duration: 1.5)) {
-                        showView.toggle()
-                    }
+            // Controls - Use sliders, toggles, and preset buttons
+            VStack(alignment: .leading, spacing: 15) {
+                // Slider for numeric parameters
+                VStack(alignment: .leading) {
+                    Text("Custom Param 1: \(customParam1, specifier: "%.1f")")
+                        .font(.caption)
+                    Slider(value: $customParam1, in: 0.1...5.0)
                 }
-                .buttonStyle(.borderedProminent)
                 
-                // Test different parameters
-                HStack(spacing: 10) {
-                    Button("Variant 1") {
-                        withAnimation(.easeInOut(duration: 2.0)) {
-                            showView.toggle()
-                        }
-                    }
-                    
-                    Button("Variant 2") {
-                        withAnimation(.easeInOut(duration: 1.0)) {
-                            showView.toggle()
-                        }
-                    }
+                VStack(alignment: .leading) {
+                    Text("Custom Param 2: \(Int(customParam2))")
+                        .font(.caption)
+                    Slider(value: $customParam2, in: 1...20, step: 1)
                 }
-                .buttonStyle(.bordered)
+                
+                // Toggle for boolean parameters
+                Toggle("Bool Param", isOn: $boolParam)
+                    .font(.caption)
+                
+                // Preset buttons (optional) - only SET values, don't trigger animation
+                HStack(spacing: 10) {
+                    Button("Preset 1") {
+                        customParam1 = 1.0
+                        customParam2 = 5.0
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button("Preset 2") {
+                        customParam1 = 3.0
+                        customParam2 = 15.0
+                    }
+                    .buttonStyle(.bordered)
+                }
             }
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(15)
             
-            Spacer()
+            // Single Trigger Button - only this button triggers the animation
+            Button(action: {
+                withAnimation(.easeInOut(duration: 1.5)) {
+                    showView.toggle()
+                }
+            }) {
+                Text("Toggle Transition")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
         }
         .padding()
         .navigationTitle("EffectName")
@@ -329,6 +366,19 @@ struct EffectNameView: View {
 #Preview {
     EffectNameView()
 }
+```
+
+**Demo View Guidelines**:
+- Use `@State` variables for all customizable parameters
+- Pass state variables to the transition in real-time
+- Use `Slider` for numeric parameters (Double/CGFloat/Int)
+- Use `Toggle` for boolean parameters
+- Use `Picker` for enum parameters
+- Preset buttons should only SET parameter values, not trigger animations
+- Have only ONE "Toggle Transition" button that triggers the animation
+- Group controls in a VStack with gray background
+- Show current parameter values in labels above sliders
+- Use appropriate number formatting: `%.1f` for floats, `%d` or `Int()` for integers
 ```
 
 ### 4. Register in Shader Library (`Sources/ViewIsComming/ViewIsCommingShaderLibrary.swift`)
