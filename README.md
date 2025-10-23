@@ -4,6 +4,9 @@
 It provides a rich collection of powerful, custom `Transition` effects, empowering developers to easily implement smooth, unique,
 and complex entrance and exit animations for their Views.
 
+> **Inspired by**: Transition effects are inspired and adapted from [GL Transitions](https://gl-transitions.com/) -
+> a collection of GLSL transitions, reimplemented for SwiftUI using Metal shaders.
+
 ---
 
 ## ✨ Features
@@ -34,3 +37,10 @@ dependencies: [
     .package(url: "https://github.com/tuanemdev/ViewIsComming", .upToNextMajor(from: "0.1.0"))
 ]
 ```
+
+---
+
+## 🚀 Usage
+
+For detailed usage examples and demonstrations of all available transitions,
+please refer to the **Demo app** included in the `Example` folder.
