@@ -7,6 +7,9 @@ struct ContentView: View {
                 NavigationLink("SquaresWire") {
                     SquaresWireView()
                 }
+                NavigationLink("PinWheel") {
+                    PinWheelView()
+                }
             }
             .navigationTitle("View Is Comming")
         }
