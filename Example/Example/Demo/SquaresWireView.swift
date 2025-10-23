@@ -13,7 +13,8 @@ struct SquaresWireView: View {
         ScrollView {
             ZStack {
                 if showView {
-                    Color.red
+                    Image(.haLong)
+                        .resizable()
                         .transition(
                             .squaresWire(
                                 squares: CGSize(width: squares, height: squares),
