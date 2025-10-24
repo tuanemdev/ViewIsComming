@@ -1,9 +1,9 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func angular(
-        startingAngle: Double = 90,
+        startingAngle: Angle = .degrees(90),
         clockwise: Bool = true
     ) -> AnyTransition {
         .modifier(
@@ -21,9 +21,9 @@ public extension AnyTransition {
     }
 }
 
-struct AngularModifier: ViewModifier {
+fileprivate struct AngularModifier: ViewModifier {
     let progress: Double
-    let startingAngle: Double
+    let startingAngle: Angle
     let clockwise: Bool
     
     func body(content: Content) -> some View {
@@ -34,7 +34,7 @@ struct AngularModifier: ViewModifier {
                         ViewIsCommingShaderLibrary.angular(
                             .float2(geometryProxy.size),
                             .float(progress),
-                            .float(startingAngle),
+                            .float(startingAngle.degrees),
                             .float(clockwise ? 1.0 : 0.0)
                         ),
                         maxSampleOffset: .zero
@@ -43,10 +43,10 @@ struct AngularModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == AngularTransition {
     static func angular(
-        startingAngle: Double = 90,
+        startingAngle: Angle = .degrees(90),
         clockwise: Bool = true
     ) -> Self {
         AngularTransition(
@@ -57,7 +57,7 @@ public extension Transition where Self == AngularTransition {
 }
 
 public struct AngularTransition: Transition {
-    let startingAngle: Double
+    let startingAngle: Angle
     let clockwise: Bool
     
     public func body(content: Content, phase: TransitionPhase) -> some View {
@@ -68,7 +68,7 @@ public struct AngularTransition: Transition {
                         ViewIsCommingShaderLibrary.angular(
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0),
-                            .float(startingAngle),
+                            .float(startingAngle.degrees),
                             .float(clockwise ? 1.0 : 0.0)
                         ),
                         maxSampleOffset: .zero

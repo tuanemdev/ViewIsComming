@@ -15,7 +15,7 @@ struct AngularView: View {
                         .resizable()
                         .transition(
                             .angular(
-                                startingAngle: startingAngle,
+                                startingAngle: .degrees(startingAngle),
                                 clockwise: clockwise
                             )
                         )
@@ -27,39 +27,50 @@ struct AngularView: View {
             
             // Controls
             VStack(alignment: .leading, spacing: 15) {
-                VStack(alignment: .leading) {
-                    Text("Starting Angle: \(Int(startingAngle))°")
-                        .font(.caption)
-                    Slider(value: $startingAngle, in: 0...360, step: 15)
-                }
-                
-                // Direction toggle
                 Toggle("Clockwise", isOn: $clockwise)
                     .font(.caption)
                 
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Top (90°)") {
+                // Preset buttons in 4 directions
+                VStack(spacing: 10) {
+                    // Top
+                    Button {
                         startingAngle = 90
+                    } label: {
+                        Image(systemName: "arrowshape.up.circle")
                     }
-                    .buttonStyle(.bordered)
                     
-                    Button("Right (0°)") {
-                        startingAngle = 0
+                    HStack(spacing: 40) {
+                        // Left
+                        Button {
+                            startingAngle = 180
+                        } label: {
+                            Image(systemName: "arrowshape.left.circle")
+                        }
+                        
+                        // Right
+                        Button {
+                            startingAngle = 0
+                        } label: {
+                            Image(systemName: "arrowshape.right.circle")
+                        }
                     }
-                    .buttonStyle(.bordered)
-                }
-                
-                HStack(spacing: 10) {
-                    Button("Bottom (270°)") {
+                    
+                    // Bottom
+                    Button {
                         startingAngle = 270
+                    } label: {
+                        Image(systemName: "arrowshape.down.circle")
                     }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Left (180°)") {
-                        startingAngle = 180
-                    }
-                    .buttonStyle(.bordered)
+                }
+                .frame(maxWidth: .infinity)
+                .buttonStyle(.bordered)
+                .font(.title2)
+                
+                // Slider
+                VStack(alignment: .leading) {
+                    Text("Starting Angle: \(Int(startingAngle))°")
+                        .font(.caption)
+                    Slider(value: $startingAngle, in: 0...360)
                 }
             }
             .padding()
@@ -68,15 +79,15 @@ struct AngularView: View {
             
             // Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text(showView ? "Hide" : "Show")
                     .font(.headline)
-                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
+                    .foregroundColor(.white)
                     .background(Color.blue)
                     .cornerRadius(10)
             }
