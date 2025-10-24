@@ -7,7 +7,7 @@ struct ContentView: View {
                 NavigationLink("Angular") {
                     AngularView()
                 }
-                NavigationLink("Book Flip") {
+                NavigationLink("BookFlip") {
                     BookFlipView()
                 }
                 NavigationLink("Bounce") {

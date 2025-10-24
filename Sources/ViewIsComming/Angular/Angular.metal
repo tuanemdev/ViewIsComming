@@ -2,12 +2,13 @@
 #include <metal_stdlib>
 using namespace metal;
 
-[[ stitchable ]] half4 angular(float2 position,
-                               SwiftUI::Layer layer,
-                               float2 size,
-                               float progress,
-                               float startingAngle,
-                               float clockwise) {
+[[ stitchable ]]
+half4 angular(float2 position,
+              SwiftUI::Layer layer,
+              float2 size,
+              float progress,
+              float startingAngle,
+              float clockwise) {
     // PI constant
     const float PI = 3.141592653589;
     // Normalize coordinates to [0, 1]

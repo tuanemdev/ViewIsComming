@@ -2,47 +2,86 @@ import SwiftUI
 import ViewIsComming
 
 struct BookFlipView: View {
-    @State private var showView = true
+    @State private var showView = false
+    @State private var flipDirection: BookFlipDirection = .right
     
     var body: some View {
         ScrollView {
-            ZStack {
-                if showView {
-                    Image(.haNoi)
-                        .resizable()
-                        .transition(.bookFlip)
+            VStack(spacing: 20) {
+                ZStack {
+                    if showView {
+                        Image(.haNoi)
+                            .resizable()
+                            .transition(.asymmetric(
+                                insertion: .bookFlip(direction: flipDirection),
+                                removal: .bookFlip(direction: flipDirection.opposite)
+                            ))
+                            .id("HaNoi-\(flipDirection)")
+                    } else {
+                        Image(.haLong)
+                            .resizable()
+                            .transition(.asymmetric(
+                                insertion: .bookFlip(direction: flipDirection),
+                                removal: .bookFlip(direction: flipDirection.opposite)
+                            ))
+                            .id("HaLong-\(flipDirection)")
+                    }
                 }
-            }
-            .frame(height: 300)
-            .frame(maxWidth: .infinity)
-            .cornerRadius(20)
-            
-            // Info
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Book Flip Transition")
-                    .font(.headline)
+                .frame(height: 300)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 50)
                 
-                Text("This transition simulates a page flip effect with perspective skewing. No adjustable parameters.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(15)
-            
-            // Single Trigger Button
-            Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
-                    showView.toggle()
+                HStack(spacing: 20) {
+                    // Flip Left Button
+                    Button(action: {
+                        flipDirection = .left
+                        withAnimation(.linear(duration: 1.0)) {
+                            showView.toggle()
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.left")
+                            Text("Flip Left")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            LinearGradient(
+                                colors: [Color.blue, Color.cyan],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(10)
+                    }
+                    
+                    // Flip Right Button
+                    Button(action: {
+                        flipDirection = .right
+                        withAnimation(.linear(duration: 1.0)) {
+                            showView.toggle()
+                        }
+                    }) {
+                        HStack {
+                            Text("Flip Right")
+                            Image(systemName: "arrow.right")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            LinearGradient(
+                                colors: [Color.orange, Color.red],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(10)
+                    }
                 }
-            }) {
-                Text("Toggle Transition")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(10)
             }
         }
         .padding()

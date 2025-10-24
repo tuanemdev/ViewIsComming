@@ -30,25 +30,63 @@ When converting from GLSL to SwiftUI:
 
 #### Option 1: Metal Shader Approach (Recommended for complex effects)
 
-1. **Replace `mix()` with alpha masking**:
+**CRITICAL UNDERSTANDING:**
+
+In **GLSL (GL Transitions)**:
+- Works with TWO images: `getFromColor(uv)` and `getToColor(uv)`
+- `from` = old/disappearing image, `to` = new/appearing image
+- `mix(from, to, progress)` blends between them
+- `progress = 0` → shows "from", `progress = 1` → shows "to"
+
+In **SwiftUI Transition**:
+- Works with ONE view only: the view being transitioned
+- Shader receives ONLY the appearing/disappearing view
+- `progress = 0` → view fully hidden, `progress = 1` → view fully visible
+- Use mask to control visibility: `color * mask`
+
+**Conversion Steps:**
+
+1. **Understand GLSL mix() logic**:
    ```glsl
-   // GLSL (original)
-   return mix(getToColor(p), getFromColor(p), step(signed, 0.5));
+   // GLSL example from BookFlip
+   if (p.x < 0.5) {
+     return mix(getFromColor(p), getToColor(skewLeft(p)) * addShade(), pr);
+   } else {
+     return mix(getFromColor(skewRight(p)) * addShade(), getToColor(p), pr);
+   }
    ```
-   
+
+2. **Identify which part is "to" (appearing view)**:
+   - In the mix, find where `getToColor()` appears
+   - That's YOUR view in SwiftUI
+   - When `mix(from, to, pr)`, "to" is visible when `pr = 1`
+   - When `mix(to, from, pr)`, "to" is visible when `pr = 0`
+
+3. **Convert to mask logic**:
    ```metal
-   // Metal (SwiftUI)
-   half4 color = layer.sample(position);
-   float mask = step(signed, 0.5);  // or 1.0 - step() depending on logic
-   return color * half(mask);
+   // If GLSL: mix(from, to*skew, pr) → to is visible when pr=1
+   sampleUV = skewLeft(uv, progress);
+   mask = pr;  // visible when pr=1
+   
+   // If GLSL: mix(from*skew, to, pr) → to is visible when pr=1
+   sampleUV = uv;  // to is NOT skewed
+   mask = pr;
    ```
 
-2. **Calculate mask based on progress**:
-   - Analyze the original `mix()` logic
-   - Determine when the effect should show "to" color (visible)
-   - Convert to mask: 1.0 = visible, 0.0 = hidden
+4. **Handle transformations (skewing, rotation, etc.)**:
+   - Apply transformation to `sampleUV` ONLY if "to" view is transformed in GLSL
+   - If "from" is transformed and "to" is normal → use normal `uv`
+   - If "to" is transformed → apply transformation to `sampleUV`
 
-3. **Handle edge cases**:
+5. **Add bounds checking for transformed UVs**:
+   ```metal
+   if (sampleUV.x < 0.0 || sampleUV.x > 1.0 || 
+       sampleUV.y < 0.0 || sampleUV.y > 1.0) {
+       mask = 0.0;  // Hide out-of-bounds pixels
+   }
+   ```
+
+6. **Handle edge cases**:
    - Ensure progress = 0.0 results in mask = 0.0 (fully hidden)
    - Ensure progress = 1.0 results in mask = 1.0 (fully visible)
    - Test all angles/positions, especially edge cases
@@ -274,6 +312,11 @@ public struct EffectNameTransition: Transition {
 ### 3. Demo View (`Example/Example/Demo/[EffectName]View.swift`)
 
 **Important**: Demo views should allow real-time parameter adjustment using sliders and toggles, not multiple animation trigger buttons.
+
+**For Asymmetric Transitions** (like BookFlip with left/right variants):
+- Use `.asymmetric(insertion:removal:)` to specify different transitions
+- Example: Book opening effect where insertion flips right, removal flips left
+- Always use single `@State var showView` toggle, never separate states for each direction
 
 ```swift
 import SwiftUI
