@@ -1,5 +1,6 @@
 #include <SwiftUI/SwiftUI_Metal.h>
 #include <metal_stdlib>
+#include "../Constants.metal"
 using namespace metal;
 
 [[ stitchable ]]
@@ -9,8 +10,6 @@ half4 angular(float2 position,
               float progress,
               float startingAngle,
               float clockwise) {
-    // PI constant
-    const float PI = 3.141592653589;
     // Normalize coordinates to [0, 1]
     float2 uv = position / size;
     // Calculate vector from center (0.5, 0.5) to current position
