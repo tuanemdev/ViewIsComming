@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func butterflyWaveScrawler(
         amplitude: Double = 1.0,
@@ -48,7 +48,7 @@ struct ButterflyWaveScrawlerModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == ButterflyWaveScrawlerTransition {
     static func butterflyWaveScrawler(
         amplitude: Double = 1.0,

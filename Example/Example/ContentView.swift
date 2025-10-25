@@ -19,7 +19,7 @@ struct ContentView: View {
                 NavigationLink("Burn") {
                     BurnView()
                 }
-                NavigationLink("Butterfly Wave Scrawler") {
+                NavigationLink("ButterflyWaveScrawler") {
                     ButterflyWaveScrawlerView()
                 }
                 NavigationLink("Checkerboard") {
