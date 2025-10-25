@@ -22,9 +22,6 @@ struct ContentView: View {
                 NavigationLink("ButterflyWaveScrawler") {
                     ButterflyWaveScrawlerView()
                 }
-                NavigationLink("Checkerboard") {
-                    CheckerboardView()
-                }
                 NavigationLink("Circle Crop") {
                     CircleCropView()
                 }
