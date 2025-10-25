@@ -1,31 +1,47 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - Direction Enum
+public enum BounceDirection: Sendable {
+    case `in`
+    case out
+    
+    var floatValue: Float {
+        switch self {
+        case .in: return 1.0
+        case .out: return 0.0
+        }
+    }
+}
+
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that creates a bouncing effect.
-    ///
-    /// - Parameters:
-    ///   - bounces: Number of bounces (1.0 to 10.0). Default is 4.0.
-    ///   - shadowAlpha: Shadow opacity (0.0 to 1.0). Default is 0.6.
-    ///   - shadowHeight: Shadow size (0.0 to 0.3). Default is 0.075.
-    /// - Returns: A transition that creates a bounce effect.
     static func bounce(
-        bounces: Double = 4.0,
-        shadowAlpha: Double = 0.6,
-        shadowHeight: Double = 0.075
+        bounces: Double = 4.0
     ) -> AnyTransition {
-        .modifier(
-            active: BounceModifier(
-                progress: 0,
-                bounces: bounces,
-                shadowAlpha: shadowAlpha,
-                shadowHeight: shadowHeight
+        .asymmetric(
+            insertion: .modifier(
+                active: BounceModifier(
+                    progress: 0,
+                    bounces: bounces,
+                    direction: .in
+                ),
+                identity: BounceModifier(
+                    progress: 1,
+                    bounces: bounces,
+                    direction: .in
+                )
             ),
-            identity: BounceModifier(
-                progress: 1,
-                bounces: bounces,
-                shadowAlpha: shadowAlpha,
-                shadowHeight: shadowHeight
+            removal: .modifier(
+                active: BounceModifier(
+                    progress: 1,
+                    bounces: bounces,
+                    direction: .out
+                ),
+                identity: BounceModifier(
+                    progress: 0,
+                    bounces: bounces,
+                    direction: .out
+                )
             )
         )
     }
@@ -34,8 +50,7 @@ public extension AnyTransition {
 struct BounceModifier: ViewModifier {
     let progress: Double
     let bounces: Double
-    let shadowAlpha: Double
-    let shadowHeight: Double
+    let direction: BounceDirection
     
     func body(content: Content) -> some View {
         content
@@ -46,55 +61,56 @@ struct BounceModifier: ViewModifier {
                             .float2(geometryProxy.size),
                             .float(progress),
                             .float(bounces),
-                            .float(shadowAlpha),
-                            .float(shadowHeight)
+                            .float(direction.floatValue)
                         ),
-                        maxSampleOffset: CGSize(width: 0, height: 50)
+                        maxSampleOffset: .zero
                     )
             }
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == BounceTransition {
-    /// A transition that creates a bouncing effect.
-    ///
-    /// - Parameters:
-    ///   - bounces: Number of bounces (1.0 to 10.0). Default is 4.0.
-    ///   - shadowAlpha: Shadow opacity (0.0 to 1.0). Default is 0.6.
-    ///   - shadowHeight: Shadow size (0.0 to 0.3). Default is 0.075.
-    /// - Returns: A transition that creates a bounce effect.
-    static func bounce(
-        bounces: Double = 4.0,
-        shadowAlpha: Double = 0.6,
-        shadowHeight: Double = 0.075
+    static func bounceIn(
+        bounces: Double = 4.0
     ) -> Self {
         BounceTransition(
             bounces: bounces,
-            shadowAlpha: shadowAlpha,
-            shadowHeight: shadowHeight
+            direction: .in
+        )
+    }
+    
+    static func bounceOut(
+        bounces: Double = 4.0
+    ) -> Self {
+        BounceTransition(
+            bounces: bounces,
+            direction: .out
         )
     }
 }
 
 public struct BounceTransition: Transition {
     let bounces: Double
-    let shadowAlpha: Double
-    let shadowHeight: Double
+    let direction: BounceDirection
     
     public func body(content: Content, phase: TransitionPhase) -> some View {
         content
             .visualEffect { content, geometryProxy in
-                content
+                let progress: Double = if phase.isIdentity {
+                    direction == .in ? 1.0 : 0.0
+                } else {
+                    direction == .in ? 0.0 : 1.0
+                }
+                return content
                     .layerEffect(
                         ViewIsCommingShaderLibrary.bounce(
                             .float2(geometryProxy.size),
-                            .float(phase.isIdentity ? 1 : 0),
+                            .float(progress),
                             .float(bounces),
-                            .float(shadowAlpha),
-                            .float(shadowHeight)
+                            .float(direction.floatValue)
                         ),
-                        maxSampleOffset: CGSize(width: 0, height: 50)
+                        maxSampleOffset: .zero
                     )
             }
     }
