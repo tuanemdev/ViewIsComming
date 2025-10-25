@@ -2,9 +2,7 @@ import SwiftUI
 
 // MARK: - AnyTransition
 public extension AnyTransition {
-    /// Burn transition with color glow effect
-    /// - Parameter color: The burn color (default: orange/red)
-    static func burn(color: Color = Color(red: 0.9, green: 0.4, blue: 0.2)) -> AnyTransition {
+    static func burn(color: Color) -> AnyTransition {
         .modifier(
             active: BurnModifier(progress: 0, color: color),
             identity: BurnModifier(progress: 1, color: color)
@@ -33,9 +31,7 @@ struct BurnModifier: ViewModifier {
 
 // MARK: - Transition
 public extension Transition where Self == BurnTransition {
-    /// Burn transition with color glow effect
-    /// - Parameter color: The burn color (default: orange/red)
-    static func burn(color: Color = Color(red: 0.9, green: 0.4, blue: 0.2)) -> Self {
+    static func burn(color: Color) -> Self {
         BurnTransition(color: color)
     }
 }

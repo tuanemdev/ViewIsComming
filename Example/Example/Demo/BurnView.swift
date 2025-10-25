@@ -19,6 +19,10 @@ struct BurnView: View {
                     Image(.haNoi)
                         .resizable()
                         .transition(.burn(color: colorOptions[selectedColor].color))
+                } else {
+                    Image(.haLong)
+                        .resizable()
+                        .transition(.burn(color: colorOptions[selectedColor].color))
                 }
             }
             .frame(height: 300)
@@ -27,27 +31,25 @@ struct BurnView: View {
             
             VStack(alignment: .leading, spacing: 15) {
                 VStack(alignment: .leading) {
-                    Text("Burn Color")
-                        .font(.caption)
+                    HStack {
+                        Text("Burn Color")
+                            .font(.caption)
+                        
+                        Circle()
+                            .fill(colorOptions[selectedColor].color)
+                            .frame(width: 12, height: 12)
+                    }
+                    
                     Picker("Color", selection: $selectedColor) {
                         ForEach(0..<colorOptions.count, id: \.self) { index in
-                            HStack {
-                                Circle()
-                                    .fill(colorOptions[index].color)
-                                    .frame(width: 12, height: 12)
-                                Text(colorOptions[index].name)
-                            }
-                            .tag(index)
+                            Text(colorOptions[index].name)
+                                .tag(index)
                         }
                     }
                     .pickerStyle(.menu)
                 }
                 
-                Text("Fade with a burning color glow effect")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                
-                Text("The burn color intensity peaks at the middle of the transition")
+                Text("Transition with a burning/glowing color effect. The appearing image starts with bright burn color that fades to normal as it becomes fully visible.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -56,7 +58,7 @@ struct BurnView: View {
             .cornerRadius(15)
             
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {
