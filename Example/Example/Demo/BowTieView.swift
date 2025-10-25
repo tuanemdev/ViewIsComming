@@ -11,9 +11,7 @@ struct BowTieView: View {
                 if showView {
                     Image(.haNoi)
                         .resizable()
-                        .transition(
-                            .bowTie(orientation: orientation)
-                        )
+                        .transition(.bowTie(orientation: orientation))
                 }
             }
             .frame(height: 300)
@@ -36,11 +34,12 @@ struct BowTieView: View {
             .cornerRadius(15)
             
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text(showView ? "Hide" : "Show")
+                    .transaction { $0.animation = nil }
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)

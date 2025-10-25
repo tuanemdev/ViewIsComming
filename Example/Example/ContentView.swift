@@ -13,7 +13,7 @@ struct ContentView: View {
                 NavigationLink("Bounce") {
                     BounceView()
                 }
-                NavigationLink("Bow Tie") {
+                NavigationLink("BowTie") {
                     BowTieView()
                 }
                 NavigationLink("Burn") {

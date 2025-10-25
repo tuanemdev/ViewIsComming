@@ -1,16 +1,12 @@
 import SwiftUI
 
-// MARK: - BowTie Orientation
 public enum BowTieOrientation: Sendable {
     case horizontal
     case vertical
 }
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that creates a bow tie (hourglass) reveal pattern
-    /// - Parameter orientation: The orientation of the bow tie (horizontal or vertical)
-    /// - Returns: A custom transition with bow tie effect
     static func bowTie(
         orientation: BowTieOrientation = .horizontal
     ) -> AnyTransition {
@@ -38,12 +34,12 @@ struct BowTieModifier: ViewModifier {
             .visualEffect { content, geometryProxy in
                 content
                     .layerEffect(
-                        isHorizontal ?
-                        ViewIsCommingShaderLibrary.bowTieHorizontal(
+                        isHorizontal
+                        ? ViewIsCommingShaderLibrary.bowTieHorizontal(
                             .float2(geometryProxy.size),
                             .float(progress)
-                        ) :
-                        ViewIsCommingShaderLibrary.bowTieVertical(
+                        )
+                        : ViewIsCommingShaderLibrary.bowTieVertical(
                             .float2(geometryProxy.size),
                             .float(progress)
                         ),
@@ -53,11 +49,8 @@ struct BowTieModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == BowTieTransition {
-    /// A transition that creates a bow tie (hourglass) reveal pattern
-    /// - Parameter orientation: The orientation of the bow tie (horizontal or vertical)
-    /// - Returns: A custom transition with bow tie effect
     static func bowTie(
         orientation: BowTieOrientation = .horizontal
     ) -> Self {
@@ -75,12 +68,12 @@ public struct BowTieTransition: Transition {
             .visualEffect { content, geometryProxy in
                 content
                     .layerEffect(
-                        isHorizontal ?
-                        ViewIsCommingShaderLibrary.bowTieHorizontal(
+                        isHorizontal
+                        ? ViewIsCommingShaderLibrary.bowTieHorizontal(
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0)
-                        ) :
-                        ViewIsCommingShaderLibrary.bowTieVertical(
+                        )
+                        : ViewIsCommingShaderLibrary.bowTieVertical(
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0)
                         ),
