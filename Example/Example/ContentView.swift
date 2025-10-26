@@ -22,14 +22,8 @@ struct ContentView: View {
                 NavigationLink("ButterflyWaveScrawler") {
                     ButterflyWaveScrawlerView()
                 }
-                NavigationLink("Circle Crop") {
+                NavigationLink("CircleCrop") {
                     CircleCropView()
-                }
-                NavigationLink("Circle Open") {
-                    CircleOpenView()
-                }
-                NavigationLink("Circular Scale") {
-                    CircularScaleView()
                 }
                 NavigationLink("Color Phase") {
                     ColorPhaseView()

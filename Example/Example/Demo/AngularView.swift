@@ -23,6 +23,7 @@ struct AngularView: View {
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Controls

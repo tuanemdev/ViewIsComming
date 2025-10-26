@@ -16,6 +16,7 @@ struct BowTieView: View {
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             VStack(alignment: .leading, spacing: 15) {
