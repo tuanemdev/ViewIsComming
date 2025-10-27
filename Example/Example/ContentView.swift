@@ -25,9 +25,6 @@ struct ContentView: View {
                 NavigationLink("CircleCrop") {
                     CircleCropView()
                 }
-                NavigationLink("Colour Distance") {
-                    ColourDistanceView()
-                }
                 NavigationLink("Corner Vanish") {
                     CornerVanishView()
                 }
