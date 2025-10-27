@@ -25,7 +25,7 @@ struct ContentView: View {
                 NavigationLink("CircleCrop") {
                     CircleCropView()
                 }
-                NavigationLink("Corner Vanish") {
+                NavigationLink("CornerVanish") {
                     CornerVanishView()
                 }
                 NavigationLink("Crazy Parametric Fun") {

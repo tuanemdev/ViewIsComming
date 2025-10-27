@@ -4,8 +4,8 @@ import ViewIsComming
 struct CornerVanishView: View {
     @State private var showView = true
     // Controls
-    @State private var cornerSize: Double = 0.3
-    @State private var corner: Double = 0.0
+    @State private var smoothness: Double = 0.3
+    @State private var corner: Corner = .topLeft
     
     var body: some View {
         ScrollView {
@@ -15,56 +15,65 @@ struct CornerVanishView: View {
                         .resizable()
                         .transition(
                             .cornerVanish(
-                                cornerSize: cornerSize,
-                                corner: Int(corner)
+                                smoothness: smoothness,
+                                corner: corner
                             )
                         )
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Controls
             VStack(alignment: .leading, spacing: 15) {
                 VStack(alignment: .leading) {
-                    Text("Corner Size: \(cornerSize, specifier: "%.2f")")
+                    Text("Smoothness: \(smoothness, specifier: "%.2f")")
                         .font(.caption)
-                    Slider(value: $cornerSize, in: 0.0...1.0)
+                    Slider(value: $smoothness, in: 0.0...1.0)
                 }
                 
-                VStack(alignment: .leading) {
-                    Text("Corner: \(["Top-Left", "Top-Right", "Bottom-Right", "Bottom-Left"][Int(corner)])")
-                        .font(.caption)
-                    Slider(value: $corner, in: 0.0...3.0, step: 1.0)
+                VStack(spacing: 40) {
+                    HStack(spacing: 40) {
+                        // Top-Left
+                        Button {
+                            corner = .topLeft
+                        } label: {
+                            Image(systemName: "arrow.up.left.circle.fill")
+                                .foregroundColor(corner == .topLeft ? .blue : .gray)
+                        }
+                        
+                        // Top-Right
+                        Button {
+                            corner = .topRight
+                        } label: {
+                            Image(systemName: "arrow.up.right.circle.fill")
+                                .foregroundColor(corner == .topRight ? .blue : .gray)
+                        }
+                    }
+                    
+                    HStack(spacing: 40) {
+                        // Bottom-Left
+                        Button {
+                            corner = .bottomLeft
+                        } label: {
+                            Image(systemName: "arrow.down.left.circle.fill")
+                                .foregroundColor(corner == .bottomLeft ? .blue : .gray)
+                        }
+                        
+                        // Bottom-Right
+                        Button {
+                            corner = .bottomRight
+                        } label: {
+                            Image(systemName: "arrow.down.right.circle.fill")
+                                .foregroundColor(corner == .bottomRight ? .blue : .gray)
+                        }
+                    }
                 }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("↖️ TL") {
-                        corner = 0.0
-                        cornerSize = 0.3
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("↗️ TR") {
-                        corner = 1.0
-                        cornerSize = 0.3
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("↘️ BR") {
-                        corner = 2.0
-                        cornerSize = 0.2
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("↙️ BL") {
-                        corner = 3.0
-                        cornerSize = 0.4
-                    }
-                    .buttonStyle(.bordered)
-                }
+                .frame(maxWidth: .infinity)
+                .buttonStyle(.plain)
+                .font(.title)
             }
             .padding()
             .background(Color.gray.opacity(0.1))
@@ -72,15 +81,15 @@ struct CornerVanishView: View {
             
             // Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text(showView ? "Hide" : "Show")
                     .font(.headline)
-                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
+                    .foregroundColor(.white)
                     .background(Color.blue)
                     .cornerRadius(10)
             }

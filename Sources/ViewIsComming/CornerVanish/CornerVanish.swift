@@ -1,36 +1,37 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+public enum Corner: Float, CaseIterable, Sendable {
+    case topLeft = 0
+    case topRight = 1
+    case bottomRight = 2
+    case bottomLeft = 3
+}
+
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that vanishes from a corner.
-    ///
-    /// - Parameters:
-    ///   - cornerSize: Edge smoothness (0.0 to 1.0). Default is 0.3.
-    ///   - corner: Corner to vanish from (0=TL, 1=TR, 2=BR, 3=BL). Default is 0.
-    /// - Returns: A transition that vanishes from a corner.
     static func cornerVanish(
-        cornerSize: Double = 0.3,
-        corner: Int = 0
+        smoothness: Double = 0.3,
+        corner: Corner = .topLeft
     ) -> AnyTransition {
         .modifier(
             active: CornerVanishModifier(
                 progress: 0,
-                cornerSize: cornerSize,
+                smoothness: smoothness,
                 corner: corner
             ),
             identity: CornerVanishModifier(
                 progress: 1,
-                cornerSize: cornerSize,
+                smoothness: smoothness,
                 corner: corner
             )
         )
     }
 }
 
-struct CornerVanishModifier: ViewModifier {
+fileprivate struct CornerVanishModifier: ViewModifier {
     let progress: Double
-    let cornerSize: Double
-    let corner: Int
+    let smoothness: Double
+    let corner: Corner
     
     func body(content: Content) -> some View {
         content
@@ -40,8 +41,8 @@ struct CornerVanishModifier: ViewModifier {
                         ViewIsCommingShaderLibrary.cornerVanish(
                             .float2(geometryProxy.size),
                             .float(progress),
-                            .float(cornerSize),
-                            .float(Float(corner))
+                            .float(smoothness),
+                            .float(corner.rawValue)
                         ),
                         maxSampleOffset: .zero
                     )
@@ -49,28 +50,22 @@ struct CornerVanishModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == CornerVanishTransition {
-    /// A transition that vanishes from a corner.
-    ///
-    /// - Parameters:
-    ///   - cornerSize: Edge smoothness (0.0 to 1.0). Default is 0.3.
-    ///   - corner: Corner to vanish from (0=TL, 1=TR, 2=BR, 3=BL). Default is 0.
-    /// - Returns: A transition that vanishes from a corner.
     static func cornerVanish(
-        cornerSize: Double = 0.3,
-        corner: Int = 0
+        smoothness: Double = 0.3,
+        corner: Corner = .topLeft
     ) -> Self {
         CornerVanishTransition(
-            cornerSize: cornerSize,
+            smoothness: smoothness,
             corner: corner
         )
     }
 }
 
 public struct CornerVanishTransition: Transition {
-    let cornerSize: Double
-    let corner: Int
+    let smoothness: Double
+    let corner: Corner
     
     public func body(content: Content, phase: TransitionPhase) -> some View {
         content
@@ -80,8 +75,8 @@ public struct CornerVanishTransition: Transition {
                         ViewIsCommingShaderLibrary.cornerVanish(
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0),
-                            .float(cornerSize),
-                            .float(Float(corner))
+                            .float(smoothness),
+                            .float(corner.rawValue)
                         ),
                         maxSampleOffset: .zero
                     )
