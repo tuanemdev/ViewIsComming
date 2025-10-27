@@ -1,10 +1,7 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that zooms and fades simultaneously
-    /// - Parameter strength: The zoom intensity (default: 0.4)
-    /// - Returns: A custom transition with cross zoom effect
     static func crossZoom(
         strength: Double = 0.4
     ) -> AnyTransition {
@@ -35,17 +32,14 @@ struct CrossZoomModifier: ViewModifier {
                             .float(progress),
                             .float(strength)
                         ),
-                        maxSampleOffset: CGSize(width: 100, height: 100)
+                        maxSampleOffset: .zero
                     )
             }
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == CrossZoomTransition {
-    /// A transition that zooms and fades simultaneously
-    /// - Parameter strength: The zoom intensity (default: 0.4)
-    /// - Returns: A custom transition with cross zoom effect
     static func crossZoom(
         strength: Double = 0.4
     ) -> Self {
@@ -66,7 +60,7 @@ public struct CrossZoomTransition: Transition {
                             .float(phase.isIdentity ? 1 : 0),
                             .float(strength)
                         ),
-                        maxSampleOffset: CGSize(width: 100, height: 100)
+                        maxSampleOffset: .zero
                     )
             }
     }

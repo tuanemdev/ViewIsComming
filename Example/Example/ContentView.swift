@@ -34,7 +34,7 @@ struct ContentView: View {
                 NavigationLink("CrossHatch") {
                     CrossHatchView()
                 }
-                NavigationLink("Cross Zoom") {
+                NavigationLink("CrossZoom") {
                     CrossZoomView()
                 }
                 NavigationLink("Cube") {

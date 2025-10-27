@@ -18,6 +18,7 @@ struct CrossZoomView: View {
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             VStack(alignment: .leading, spacing: 15) {
@@ -25,23 +26,6 @@ struct CrossZoomView: View {
                     Text("Strength: \(strength, specifier: "%.2f")")
                         .font(.caption)
                     Slider(value: $strength, in: 0.0...1.0)
-                }
-                
-                HStack(spacing: 10) {
-                    Button("Subtle") {
-                        strength = 0.2
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Default") {
-                        strength = 0.4
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Strong") {
-                        strength = 0.8
-                    }
-                    .buttonStyle(.bordered)
                 }
             }
             .padding()
@@ -53,7 +37,8 @@ struct CrossZoomView: View {
                     showView.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text(showView ? "Hide" : "Show")
+                    .transaction { $0.animation = nil }
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
