@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func crossHatch(
         center: CGPoint = CGPoint(x: 0.5, y: 0.5),
@@ -48,7 +48,7 @@ struct CrossHatchModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == CrossHatchTransition {
     static func crossHatch(
         center: CGPoint = CGPoint(x: 0.5, y: 0.5),

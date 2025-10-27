@@ -31,7 +31,7 @@ struct ContentView: View {
                 NavigationLink("CrazyParametric") {
                     CrazyParametricView()
                 }
-                NavigationLink("Cross Hatch") {
+                NavigationLink("CrossHatch") {
                     CrossHatchView()
                 }
                 NavigationLink("Cross Zoom") {
