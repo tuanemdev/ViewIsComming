@@ -28,8 +28,8 @@ struct ContentView: View {
                 NavigationLink("CornerVanish") {
                     CornerVanishView()
                 }
-                NavigationLink("Crazy Parametric Fun") {
-                    CrazyParametricFunView()
+                NavigationLink("CrazyParametric") {
+                    CrazyParametricView()
                 }
                 NavigationLink("Cross Hatch") {
                     CrossHatchView()

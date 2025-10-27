@@ -86,6 +86,7 @@ struct CornerVanishView: View {
                 }
             }) {
                 Text(showView ? "Hide" : "Show")
+                    .transaction { $0.animation = nil }
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
