@@ -6,6 +6,7 @@ struct CubeView: View {
     // Controls
     @State private var perspective: Double = 0.7
     @State private var unzoom: Double = 0.3
+    @State private var rotateRight: Bool = true
     
     var body: some View {
         ScrollView {
@@ -14,59 +15,65 @@ struct CubeView: View {
                     Image(.haNoi)
                         .resizable()
                         .transition(
-                            .cube(
-                                perspective: perspective,
-                                unzoom: unzoom
+                            .asymmetric(
+                                insertion: .cube(
+                                    perspective: perspective,
+                                    unzoom: unzoom,
+                                    rotateRight: rotateRight
+                                ),
+                                removal: .cube(
+                                    perspective: perspective,
+                                    unzoom: unzoom,
+                                    rotateRight: !rotateRight
+                                )
+                            )
+                        )
+                } else {
+                    Image(.haLong)
+                        .resizable()
+                        .transition(
+                            .asymmetric(
+                                insertion: .cube(
+                                    perspective: perspective,
+                                    unzoom: unzoom,
+                                    rotateRight: rotateRight
+                                ),
+                                removal: .cube(
+                                    perspective: perspective,
+                                    unzoom: unzoom,
+                                    rotateRight: !rotateRight
+                                )
                             )
                         )
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Controls
             VStack(alignment: .leading, spacing: 15) {
                 VStack(alignment: .leading) {
                     Text("Perspective: \(perspective, specifier: "%.1f")")
-                        .font(.caption)
                     Slider(value: $perspective, in: 0.1...2.0)
                 }
                 
                 VStack(alignment: .leading) {
                     Text("Unzoom: \(unzoom, specifier: "%.1f")")
-                        .font(.caption)
                     Slider(value: $unzoom, in: 0.0...1.0)
                 }
                 
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Subtle") {
-                        perspective = 0.4
-                        unzoom = 0.2
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Default") {
-                        perspective = 0.7
-                        unzoom = 0.3
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Strong") {
-                        perspective = 1.2
-                        unzoom = 0.5
-                    }
-                    .buttonStyle(.bordered)
-                }
+                Toggle("Rotate Right", isOn: $rotateRight)
             }
+            .font(.caption)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {
