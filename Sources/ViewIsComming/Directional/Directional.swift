@@ -1,21 +1,41 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+public enum DirectionalDirection {
+    case up
+    case down
+    case left
+    case right
+    
+    public var opposite: DirectionalDirection {
+        switch self {
+        case .up: return .down
+        case .down: return .up
+        case .left: return .right
+        case .right: return .left
+        }
+    }
+    
+    var vector: CGVector {
+        switch self {
+        case .up: return CGVector(dx: 0, dy: 1)
+        case .down: return CGVector(dx: 0, dy: -1)
+        case .left: return CGVector(dx: 1, dy: 0)
+        case .right: return CGVector(dx: -1, dy: 0)
+        }
+    }
+}
+
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that slides content in a direction with wrapping
-    /// - Parameter direction: The direction vector (default: (0, 1) for upward)
-    /// - Returns: A custom transition with directional sliding
-    static func directional(
-        direction: CGVector = CGVector(dx: 0, dy: 1)
-    ) -> AnyTransition {
+    static func directional(direction: DirectionalDirection = .right) -> AnyTransition {
         .modifier(
             active: DirectionalModifier(
                 progress: 0,
-                direction: direction
+                direction: direction.vector
             ),
             identity: DirectionalModifier(
                 progress: 1,
-                direction: direction
+                direction: direction.vector
             )
         )
     }
@@ -35,24 +55,16 @@ struct DirectionalModifier: ViewModifier {
                             .float(progress),
                             .float2(Float(direction.dx), Float(direction.dy))
                         ),
-                        maxSampleOffset: CGSize(
-                            width: abs(direction.dx) * 500,
-                            height: abs(direction.dy) * 500
-                        )
+                        maxSampleOffset: .zero
                     )
             }
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == DirectionalTransition {
-    /// A transition that slides content in a direction with wrapping
-    /// - Parameter direction: The direction vector (default: (0, 1) for upward)
-    /// - Returns: A custom transition with directional sliding
-    static func directional(
-        direction: CGVector = CGVector(dx: 0, dy: 1)
-    ) -> Self {
-        DirectionalTransition(direction: direction)
+    static func directional(direction: DirectionalDirection = .right) -> Self {
+        DirectionalTransition(direction: direction.vector)
     }
 }
 
@@ -69,10 +81,7 @@ public struct DirectionalTransition: Transition {
                             .float(phase.isIdentity ? 1 : 0),
                             .float2(Float(direction.dx), Float(direction.dy))
                         ),
-                        maxSampleOffset: CGSize(
-                            width: abs(direction.dx) * 500,
-                            height: abs(direction.dy) * 500
-                        )
+                        maxSampleOffset: .zero
                     )
             }
     }

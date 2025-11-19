@@ -2,33 +2,23 @@
 #include <metal_stdlib>
 using namespace metal;
 
-// Directional transition
-// Adapted from: https://gl-transitions.com/editor/Directional
-// Author: Gaëtan Renaudeau
-// License: MIT
-
-[[ stitchable ]] half4 directional(float2 position,
-                                    SwiftUI::Layer layer,
-                                    float2 size,
-                                    float progress,
-                                    float2 direction) {
+[[ stitchable ]]
+half4 directional(float2 position,
+                  SwiftUI::Layer layer,
+                  float2 size,
+                  float progress,
+                  float2 direction) {
     float2 uv = position / size;
+    // Safely normalize direction: if zero-length, default to upward
+    float dirLength = length(direction);
+    float2 dirNorm = (dirLength > 0.0001) ? (direction / dirLength) : float2(0.0, 1.0);
+    // - progress == 0 -> sample from offscreen (hidden)
+    // - progress == 1 -> sample from uv (visible)
+    float2 sampleUV = uv + (1.0 - progress) * dirNorm;
+    // Determine visibility: if sampleUV is inside [0,1] range, show; else hide
+    float inBounds = step(0.0, sampleUV.x) * step(sampleUV.x, 1.0) * step(0.0, sampleUV.y) * step(sampleUV.y, 1.0);
     
-    // Add progress in the direction
-    float2 p = uv + progress * sign(direction);
-    float2 f = fract(p);
-    
-    // Check if we're still within bounds
-    float inBounds = step(0.0, p.y) * step(p.y, 1.0) * step(0.0, p.x) * step(p.x, 1.0);
-    
-    // Sample at the fractional position
-    float2 samplePos = f * size;
-    samplePos = clamp(samplePos, float2(0.0), size);
+    float2 samplePos = clamp(sampleUV, float2(0.0), float2(1.0)) * size;
     half4 color = layer.sample(samplePos);
-    
-    // If out of bounds, fade to transparent
-    // If in bounds, use the sampled color
-    float mask = (1.0 - progress) * inBounds;
-    
-    return color * half(mask);
+    return color * half(inBounds);
 }

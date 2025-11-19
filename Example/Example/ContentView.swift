@@ -40,9 +40,6 @@ struct ContentView: View {
                 NavigationLink("Cube") {
                     CubeView()
                 }
-                NavigationLink("Diagonal Wipe") {
-                    DiagonalWipeView()
-                }
                 NavigationLink("Directional") {
                     DirectionalView()
                 }

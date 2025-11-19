@@ -2,74 +2,85 @@ import SwiftUI
 import ViewIsComming
 
 struct DirectionalView: View {
-    @State private var showView = true
-    @State private var directionX: Double = 0.0
-    @State private var directionY: Double = 1.0
+    @State private var showFirstImage = true
+    @State private var direction: DirectionalDirection = .right
     
     var body: some View {
         ScrollView {
             ZStack {
-                if showView {
+                if showFirstImage {
                     Image(.haNoi)
                         .resizable()
                         .transition(
-                            .directional(direction: CGVector(dx: directionX, dy: directionY))
+                            .asymmetric(
+                                insertion: .directional(direction: direction.opposite),
+                                removal: .directional(direction: direction)
+                            )
+                        )
+                } else {
+                    Image(.haLong)
+                        .resizable()
+                        .transition(
+                            .asymmetric(
+                                insertion: .directional(direction: direction.opposite),
+                                removal: .directional(direction: direction)
+                            )
                         )
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
+            // Controls
             VStack(alignment: .leading, spacing: 15) {
-                VStack(alignment: .leading) {
-                    Text("Direction X: \(directionX, specifier: "%.1f")")
-                        .font(.caption)
-                    Slider(value: $directionX, in: -1.0...1.0)
-                }
-                
-                VStack(alignment: .leading) {
-                    Text("Direction Y: \(directionY, specifier: "%.1f")")
-                        .font(.caption)
-                    Slider(value: $directionY, in: -1.0...1.0)
-                }
-                
-                HStack(spacing: 10) {
-                    Button("→ Right") {
-                        directionX = 1.0
-                        directionY = 0.0
+                VStack(spacing: 10) {
+                    // Top
+                    Button {
+                        direction = .up
+                    } label: {
+                        Image(systemName: "arrowshape.up.circle")
                     }
-                    .buttonStyle(.bordered)
                     
-                    Button("↑ Up") {
-                        directionX = 0.0
-                        directionY = 1.0
+                    HStack(spacing: 40) {
+                        // Left
+                        Button {
+                            direction = .left
+                        } label: {
+                            Image(systemName: "arrowshape.left.circle")
+                        }
+                        
+                        // Right
+                        Button {
+                            direction = .right
+                        } label: {
+                            Image(systemName: "arrowshape.right.circle")
+                        }
                     }
-                    .buttonStyle(.bordered)
                     
-                    Button("← Left") {
-                        directionX = -1.0
-                        directionY = 0.0
+                    // Bottom
+                    Button {
+                        direction = .down
+                    } label: {
+                        Image(systemName: "arrowshape.down.circle")
                     }
-                    .buttonStyle(.bordered)
-                    
-                    Button("↓ Down") {
-                        directionX = 0.0
-                        directionY = -1.0
-                    }
-                    .buttonStyle(.bordered)
                 }
+                .frame(maxWidth: .infinity)
+                .buttonStyle(.bordered)
+                .font(.title2)
             }
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
+            // Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
-                    showView.toggle()
+                withAnimation(.linear(duration: 1.0)) {
+                    showFirstImage.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text("Switch Image")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
