@@ -14,7 +14,7 @@ struct DirectionalWipeView: View {
                         .resizable()
                         .transition(
                             .asymmetric(
-                                insertion: .directionalWipe(direction: direction.opposite, smoothness: smoothness),
+                                insertion: .directionalWipe(direction: direction, smoothness: smoothness),
                                 removal: .none
                             )
                         )
@@ -23,7 +23,7 @@ struct DirectionalWipeView: View {
                         .resizable()
                         .transition(
                             .asymmetric(
-                                insertion: .directionalWipe(direction: direction.opposite, smoothness: smoothness),
+                                insertion: .directionalWipe(direction: direction, smoothness: smoothness),
                                 removal: .none
                             )
                         )

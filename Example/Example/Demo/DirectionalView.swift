@@ -13,8 +13,8 @@ struct DirectionalView: View {
                         .resizable()
                         .transition(
                             .asymmetric(
-                                insertion: .directional(direction: direction.opposite),
-                                removal: .directional(direction: direction)
+                                insertion: .directional(direction: direction),
+                                removal: .directional(direction: direction.opposite)
                             )
                         )
                 } else {
@@ -22,8 +22,8 @@ struct DirectionalView: View {
                         .resizable()
                         .transition(
                             .asymmetric(
-                                insertion: .directional(direction: direction.opposite),
-                                removal: .directional(direction: direction)
+                                insertion: .directional(direction: direction),
+                                removal: .directional(direction: direction.opposite)
                             )
                         )
                 }
