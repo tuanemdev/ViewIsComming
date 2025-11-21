@@ -3,16 +3,16 @@ import SwiftUI
 // MARK: - AnyTransition
 public extension AnyTransition {
     static func pinWheel(
-        speed: Double = 2.0
+        blades: Int = 8
     ) -> AnyTransition {
         .modifier(
             active: PinWheelModifier(
                 progress: 0,
-                speed: speed
+                blades: blades
             ),
             identity: PinWheelModifier(
                 progress: 1,
-                speed: speed
+                blades: blades
             )
         )
     }
@@ -20,7 +20,7 @@ public extension AnyTransition {
 
 struct PinWheelModifier: ViewModifier {
     let progress: Double
-    let speed: Double
+    let blades: Int
     
     func body(content: Content) -> some View {
         content
@@ -30,7 +30,7 @@ struct PinWheelModifier: ViewModifier {
                         ViewIsCommingShaderLibrary.pinWheel(
                             .float2(geometryProxy.size),
                             .float(progress),
-                            .float(speed)
+                            .float(Float(blades))
                         ),
                         maxSampleOffset: .zero
                     )
@@ -41,16 +41,16 @@ struct PinWheelModifier: ViewModifier {
 // MARK: - Transition
 public extension Transition where Self == PinWheelTransition {
     static func pinWheel(
-        speed: Double = 2.0
+        blades: Int = 8
     ) -> Self {
         PinWheelTransition(
-            speed: speed
+            blades: blades
         )
     }
 }
 
 public struct PinWheelTransition: Transition {
-    let speed: Double
+    let blades: Int
     
     public func body(content: Content, phase: TransitionPhase) -> some View {
         content
@@ -60,7 +60,7 @@ public struct PinWheelTransition: Transition {
                         ViewIsCommingShaderLibrary.pinWheel(
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0),
-                            .float(speed)
+                            .float(Float(blades))
                         ),
                         maxSampleOffset: .zero
                     )

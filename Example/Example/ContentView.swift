@@ -227,11 +227,8 @@ struct ContentView: View {
                     Text("Perlin")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("PinWheel") {
                     PinWheelView()
-                } label: {
-                    Text("Pin Wheel")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     PixelizeView()

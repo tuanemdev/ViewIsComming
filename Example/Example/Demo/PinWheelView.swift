@@ -3,6 +3,7 @@ import ViewIsComming
 
 struct PinWheelView: View {
     @State private var showView = true
+    @State private var blades: Int = 8
     
     var body: some View {
         ScrollView {
@@ -10,44 +11,44 @@ struct PinWheelView: View {
                 if showView {
                     Image(.haNoi)
                         .resizable()
-                        .transition(.asymmetric(insertion: .pinWheel(), removal: .none))
+                        .transition(.asymmetric(insertion: .pinWheel(blades: blades), removal: .none))
                 } else {
                     Image(.haLong)
                         .resizable()
-                        .transition(.asymmetric(insertion: .pinWheel(), removal: .none))
+                        .transition(.asymmetric(insertion: .pinWheel(blades: blades), removal: .none))
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
             .cornerRadius(20)
             
-            // Trigger Button
-            VStack(spacing: 15) {
-                Button("Toggle Views") {
-                    withAnimation(.easeInOut(duration: 1.5)) {
-                        showView.toggle()
-                    }
+            VStack(alignment: .leading, spacing: 15) {
+                VStack(alignment: .leading) {
+                    Text("Blades: \(blades)")
+                        .font(.caption)
+                    Slider(value: Binding(
+                        get: { Double(blades) },
+                        set: { blades = Int($0) }
+                    ), in: 3...16, step: 1)
                 }
-                .buttonStyle(.borderedProminent)
-                
-                // Different speeds
-                HStack(spacing: 10) {
-                    Button("Slow (speed: 1.0)") {
-                        withAnimation(.easeInOut(duration: 2.0)) {
-                            showView.toggle()
-                        }
-                    }
-                    
-                    Button("Fast (speed: 4.0)") {
-                        withAnimation(.easeInOut(duration: 1.0)) {
-                            showView.toggle()
-                        }
-                    }
-                }
-                .buttonStyle(.bordered)
             }
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(15)
             
-            Spacer()
+            Button(action: {
+                withAnimation(.easeInOut(duration: 1.5)) {
+                    showView.toggle()
+                }
+            }) {
+                Text("Toggle Transition")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
         }
         .padding()
         .navigationTitle("PinWheel")
