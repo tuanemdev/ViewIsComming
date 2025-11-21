@@ -43,17 +43,8 @@ struct ContentView: View {
                 NavigationLink("Directional") {
                     DirectionalView()
                 }
-                NavigationLink("Directional Blur") {
-                    DirectionalBlurView()
-                }
                 NavigationLink("Directional Easing") {
                     DirectionalEasingView()
-                }
-                NavigationLink("Directional Warp") {
-                    DirectionalWarpView()
-                }
-                NavigationLink("Directional Wipe") {
-                    DirectionalWipeView()
                 }
                 NavigationLink("Doom Screen") {
                     DoomScreenView()
