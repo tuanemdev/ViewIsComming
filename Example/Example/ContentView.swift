@@ -46,13 +46,10 @@ struct ContentView: View {
                 NavigationLink("DirectionalWipe") {
                     DirectionalWipeView()
                 }
-                
-                NavigationLink {
+                NavigationLink("DoomScreen") {
                     DoomScreenView()
-                } label: {
-                    Text("Doom Screen")
-                        .foregroundColor(.red)
                 }
+                
                 NavigationLink {
                     DoorwayView()
                 } label: {
