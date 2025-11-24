@@ -49,13 +49,10 @@ struct ContentView: View {
                 NavigationLink("DoomScreen") {
                     DoomScreenView()
                 }
-                
-                NavigationLink {
+                NavigationLink("Doorway") {
                     DoorwayView()
-                } label: {
-                    Text("Doorway")
-                        .foregroundColor(.red)
                 }
+                
                 NavigationLink {
                     DreamyView()
                 } label: {

@@ -2,7 +2,7 @@ import SwiftUI
 import ViewIsComming
 
 struct DoorwayView: View {
-    @State private var showView = true
+    @State private var showHaNoi = true
     // Controls
     @State private var reflection: Double = 0.4
     @State private var perspective: Double = 0.4
@@ -11,16 +11,14 @@ struct DoorwayView: View {
     var body: some View {
         ScrollView {
             ZStack {
-                if showView {
+                if showHaNoi {
+                    Image(.haLong)
+                        .resizable()
+                        .transition(.doorway(reflection: reflection, perspective: perspective, depth: depth))
+                } else {
                     Image(.haNoi)
                         .resizable()
-                        .transition(
-                            .doorway(
-                                reflection: reflection,
-                                perspective: perspective,
-                                depth: depth
-                            )
-                        )
+                        .transition(.doorway(reflection: reflection, perspective: perspective, depth: depth))
                 }
             }
             .frame(height: 300)
@@ -30,58 +28,33 @@ struct DoorwayView: View {
             // Controls
             VStack(alignment: .leading, spacing: 15) {
                 VStack(alignment: .leading) {
-                    Text("Reflection: \(reflection, specifier: "%.1f")")
-                        .font(.caption)
+                    Text("Reflection: \(reflection, specifier: "%.1f") (insertion water effect)")
                     Slider(value: $reflection, in: 0.0...1.0)
                 }
                 
                 VStack(alignment: .leading) {
-                    Text("Perspective: \(perspective, specifier: "%.1f")")
-                        .font(.caption)
+                    Text("Perspective: \(perspective, specifier: "%.1f") (removal split)")
                     Slider(value: $perspective, in: 0.1...1.0)
                 }
                 
                 VStack(alignment: .leading) {
-                    Text("Depth: \(depth, specifier: "%.1f")")
-                        .font(.caption)
+                    Text("Depth: \(depth, specifier: "%.1f") (insertion zoom)")
                     Slider(value: $depth, in: 1.0...10.0)
                 }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Subtle") {
-                        reflection = 0.2
-                        perspective = 0.2
-                        depth = 2.0
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Default") {
-                        reflection = 0.4
-                        perspective = 0.4
-                        depth = 3.0
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Strong") {
-                        reflection = 0.8
-                        perspective = 0.8
-                        depth = 6.0
-                    }
-                    .buttonStyle(.bordered)
-                }
             }
+            .font(.caption)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
-                    showView.toggle()
+                withAnimation(.easeInOut(duration: 1.0)) {
+                    showHaNoi.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text(showHaNoi ? "Show Hà Nội" : "Show Hạ Long")
+                    .transaction { $0.animation = nil }
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
