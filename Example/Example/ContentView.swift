@@ -464,12 +464,6 @@ struct ContentView: View {
                 }
                 
                 NavigationLink {
-                    WipeView()
-                } label: {
-                    Text("Wipe")
-                        .foregroundColor(.red)
-                }
-                NavigationLink {
                     ZoomView()
                 } label: {
                     Text("Zoom")
