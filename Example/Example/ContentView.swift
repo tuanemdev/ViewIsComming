@@ -446,13 +446,10 @@ struct ContentView: View {
                     Text("Wave")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
-                    WindView()
-                } label: {
-                    Text("Wind")
-                        .foregroundColor(.red)
-                }
                 
+                NavigationLink("Wind") {
+                    WindView()
+                }
                 NavigationLink("WindowBlinds") {
                     WindowBlindsView()
                 }
