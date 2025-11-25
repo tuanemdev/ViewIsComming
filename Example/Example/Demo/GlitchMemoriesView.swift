@@ -15,24 +15,12 @@ struct GlitchMemoriesView: View {
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
-            .cornerRadius(20)
-            
-            // Info
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Glitch Memories Transition")
-                    .font(.headline)
-                
-                Text("This transition creates a glitch effect with RGB channel separation based on block noise. No adjustable parameters.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
             .background(Color.gray.opacity(0.1))
-            .cornerRadius(15)
+            .cornerRadius(20)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 2.0)) {
                     showView.toggle()
                 }
             }) {

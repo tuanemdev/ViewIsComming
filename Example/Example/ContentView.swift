@@ -119,12 +119,11 @@ struct ContentView: View {
                     Text("Glitch Displace")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                
+                NavigationLink("GlitchMemories") {
                     GlitchMemoriesView()
-                } label: {
-                    Text("Glitch Memories")
-                        .foregroundColor(.red)
                 }
+                
                 NavigationLink {
                     GridFlipView()
                 } label: {
