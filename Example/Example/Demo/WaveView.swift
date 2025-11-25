@@ -23,50 +23,29 @@ struct WaveView: View {
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Controls
             VStack(alignment: .leading, spacing: 15) {
                 VStack(alignment: .leading) {
                     Text("Amplitude: \(amplitude, specifier: "%.2f")")
-                        .font(.caption)
                     Slider(value: $amplitude, in: 0.01...0.3)
                 }
                 
                 VStack(alignment: .leading) {
                     Text("Waves: \(Int(waves))")
-                        .font(.caption)
                     Slider(value: $waves, in: 1.0...15.0, step: 1.0)
                 }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Gentle") {
-                        amplitude = 0.05
-                        waves = 3.0
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Default") {
-                        amplitude = 0.1
-                        waves = 5.0
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Strong") {
-                        amplitude = 0.2
-                        waves = 10.0
-                    }
-                    .buttonStyle(.bordered)
-                }
             }
+            .font(.caption)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {

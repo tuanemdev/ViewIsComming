@@ -440,13 +440,10 @@ struct ContentView: View {
                     Text("Waterfall")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
-                    WaveView()
-                } label: {
-                    Text("Wave")
-                        .foregroundColor(.red)
-                }
                 
+                NavigationLink("Wave") {
+                    WaveView()
+                }
                 NavigationLink("Wind") {
                     WindView()
                 }

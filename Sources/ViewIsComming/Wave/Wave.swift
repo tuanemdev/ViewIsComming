@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func wave(
         amplitude: Double = 0.1,
@@ -37,13 +37,13 @@ struct WaveModifier: ViewModifier {
                             .float(amplitude),
                             .float(waves)
                         ),
-                        maxSampleOffset: CGSize(width: 50, height: 0)
+                        maxSampleOffset: .zero
                     )
             }
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == WaveTransition {
     static func wave(
         amplitude: Double = 0.1,
@@ -71,7 +71,7 @@ public struct WaveTransition: Transition {
                             .float(amplitude),
                             .float(waves)
                         ),
-                        maxSampleOffset: CGSize(width: 50, height: 0)
+                        maxSampleOffset: .zero
                     )
             }
     }
