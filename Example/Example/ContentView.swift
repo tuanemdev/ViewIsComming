@@ -472,12 +472,6 @@ struct ContentView: View {
                     Text("Zoom Blur")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
-                    ZoomInCirclesView()
-                } label: {
-                    Text("Zoom In Circles")
-                        .foregroundColor(.red)
-                }
             }
             .navigationTitle("View Is Comming")
         }
