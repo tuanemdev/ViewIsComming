@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static var windowBlinds: AnyTransition {
         .modifier(
@@ -28,7 +28,7 @@ struct WindowBlindsModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == WindowBlindsTransition {
     static var windowBlinds: Self {
         WindowBlindsTransition()

@@ -452,13 +452,10 @@ struct ContentView: View {
                     Text("Wind")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
-                    WindowBlindsView()
-                } label: {
-                    Text("Window Blinds")
-                        .foregroundColor(.red)
-                }
                 
+                NavigationLink("WindowBlinds") {
+                    WindowBlindsView()
+                }
                 NavigationLink("WindowSlice") {
                     WindowSliceView()
                 }

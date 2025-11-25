@@ -15,24 +15,12 @@ struct WindowBlindsView: View {
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
-            .cornerRadius(20)
-            
-            // Info
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Window Blinds Transition")
-                    .font(.headline)
-                
-                Text("This transition simulates window blinds opening or closing. No adjustable parameters.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
             .background(Color.gray.opacity(0.1))
-            .cornerRadius(15)
+            .cornerRadius(20)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {
