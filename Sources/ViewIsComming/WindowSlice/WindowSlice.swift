@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func windowSlice(
         count: Double = 10.0,
@@ -43,7 +43,7 @@ struct WindowSliceModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == WindowSliceTransition {
     static func windowSlice(
         count: Double = 10.0,

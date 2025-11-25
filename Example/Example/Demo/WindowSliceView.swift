@@ -13,16 +13,12 @@ struct WindowSliceView: View {
                 if showView {
                     Image(.haNoi)
                         .resizable()
-                        .transition(
-                            .windowSlice(
-                                count: count,
-                                smoothness: smoothness
-                            )
-                        )
+                        .transition(.windowSlice(count: count, smoothness: smoothness))
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Controls
@@ -30,45 +26,23 @@ struct WindowSliceView: View {
                 // Count slider
                 VStack(alignment: .leading) {
                     Text("Count: \(Int(count))")
-                        .font(.caption)
                     Slider(value: $count, in: 2...30, step: 1)
                 }
                 
                 // Smoothness slider
                 VStack(alignment: .leading) {
                     Text("Smoothness: \(smoothness, specifier: "%.2f")")
-                        .font(.caption)
                     Slider(value: $smoothness, in: 0.0...1.0)
                 }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Default") {
-                        count = 10.0
-                        smoothness = 0.5
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Many Slices") {
-                        count = 25.0
-                        smoothness = 0.3
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Few Slices") {
-                        count = 5.0
-                        smoothness = 0.8
-                    }
-                    .buttonStyle(.bordered)
-                }
             }
+            .font(.caption)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {

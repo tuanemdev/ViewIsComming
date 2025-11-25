@@ -458,12 +458,11 @@ struct ContentView: View {
                     Text("Window Blinds")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                
+                NavigationLink("WindowSlice") {
                     WindowSliceView()
-                } label: {
-                    Text("Window Slice")
-                        .foregroundColor(.red)
                 }
+                
                 NavigationLink {
                     WipeView()
                 } label: {
