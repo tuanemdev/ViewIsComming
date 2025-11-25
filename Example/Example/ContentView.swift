@@ -459,19 +459,6 @@ struct ContentView: View {
                 NavigationLink("WindowSlice") {
                     WindowSliceView()
                 }
-                
-                NavigationLink {
-                    ZoomView()
-                } label: {
-                    Text("Zoom")
-                        .foregroundColor(.red)
-                }
-                NavigationLink {
-                    ZoomBlurView()
-                } label: {
-                    Text("Zoom Blur")
-                        .foregroundColor(.red)
-                }
             }
             .navigationTitle("View Is Comming")
         }
