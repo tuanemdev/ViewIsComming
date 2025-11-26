@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func perlin(
         scale: Double = 4.0,
@@ -48,7 +48,7 @@ struct PerlinModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == PerlinTransition {
     static func perlin(
         scale: Double = 4.0,

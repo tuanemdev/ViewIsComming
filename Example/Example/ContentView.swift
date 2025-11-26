@@ -211,11 +211,8 @@ struct ContentView: View {
                     Text("Page Curl")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("Perlin") {
                     PerlinView()
-                } label: {
-                    Text("Perlin")
-                        .foregroundColor(.red)
                 }
                 NavigationLink("PinWheel") {
                     PinWheelView()
