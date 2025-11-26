@@ -340,11 +340,8 @@ struct ContentView: View {
                     Text("Spiral")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("SquaresWire") {
                     SquaresWireView()
-                } label: {
-                    Text("Squares Wire")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     SqueezeView()

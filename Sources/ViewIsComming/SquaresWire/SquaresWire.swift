@@ -1,23 +1,47 @@
 import SwiftUI
 
+public enum SquaresWireDirection {
+    case right
+    case left
+    case down
+    case up
+    case downRight
+    case downLeft
+    case upRight
+    case upLeft
+    
+    var vector: CGPoint {
+        switch self {
+        case .right:        return CGPoint(x: 1.0, y: 0.0)
+        case .left:         return CGPoint(x: -1.0, y: 0.0)
+        case .down:         return CGPoint(x: 0.0, y: 1.0)
+        case .up:           return CGPoint(x: 0.0, y: -1.0)
+        case .downRight:    return CGPoint(x: 1.0, y: 1.0)
+        case .downLeft:     return CGPoint(x: -1.0, y: 1.0)
+        case .upRight:      return CGPoint(x: 1.0, y: -1.0)
+        case .upLeft:       return CGPoint(x: -1.0, y: -1.0)
+        }
+    }
+}
+
 // MARK: - AnyTransition
 public extension AnyTransition {
     static func squaresWire(
-        squares: CGSize = CGSize(width: 10, height: 10),
-        direction: CGPoint = CGPoint(x: 1.0, y: -0.5),
+        squares: Int = 10,
+        direction: SquaresWireDirection = .upRight,
         smoothness: Double = 1.6
     ) -> AnyTransition {
         .modifier(
             active: SquaresWireModifier(
                 progress: 0,
                 squares: squares,
-                direction: direction,
+                direction: direction.vector,
                 smoothness: smoothness
             ),
             identity: SquaresWireModifier(
                 progress: 1,
                 squares: squares,
-                direction: direction,
+                direction: direction.vector,
                 smoothness: smoothness
             )
         )
@@ -26,7 +50,7 @@ public extension AnyTransition {
 
 struct SquaresWireModifier: ViewModifier {
     let progress: Double
-    let squares: CGSize
+    let squares: Int
     let direction: CGPoint
     let smoothness: Double
     
@@ -38,7 +62,7 @@ struct SquaresWireModifier: ViewModifier {
                         ViewIsCommingShaderLibrary.squaresWire(
                             .float2(geometryProxy.size),
                             .float(progress),
-                            .float2(Float(squares.width), Float(squares.height)),
+                            .float2(Float(squares), Float(squares)),
                             .float2(Float(direction.x), Float(direction.y)),
                             .float(smoothness)
                         ),
@@ -51,20 +75,20 @@ struct SquaresWireModifier: ViewModifier {
 // MARK: - Transition
 public extension Transition where Self == SquaresWireTransition {
     static func squaresWire(
-        squares: CGSize = CGSize(width: 10, height: 10),
-        direction: CGPoint = CGPoint(x: 1.0, y: -0.5),
+        squares: Int = 10,
+        direction: SquaresWireDirection = .upRight,
         smoothness: Double = 1.6
     ) -> Self {
         SquaresWireTransition(
             squares: squares,
-            direction: direction,
+            direction: direction.vector,
             smoothness: smoothness
         )
     }
 }
 
 public struct SquaresWireTransition: Transition {
-    let squares: CGSize
+    let squares: Int
     let direction: CGPoint
     let smoothness: Double
     
@@ -76,7 +100,7 @@ public struct SquaresWireTransition: Transition {
                         ViewIsCommingShaderLibrary.squaresWire(
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0),
-                            .float2(Float(squares.width), Float(squares.height)),
+                            .float2(Float(squares), Float(squares)),
                             .float2(Float(direction.x), Float(direction.y)),
                             .float(smoothness)
                         ),
