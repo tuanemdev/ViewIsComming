@@ -34,7 +34,7 @@ Alternatively, add it to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/tuanemdev/ViewIsComming", .upToNextMajor(from: "0.1.0"))
+    .package(url: "https://github.com/tuanemdev/ViewIsComming", .upToNextMajor(from: "0.1.5"))
 ]
 ```
 
