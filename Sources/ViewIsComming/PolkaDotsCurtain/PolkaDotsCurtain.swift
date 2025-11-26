@@ -1,26 +1,49 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+public enum PolkaDotsCurtainCenter {
+    case topLeft
+    case topRight
+    case bottomLeft
+    case bottomRight
+    case center
+    case custom(x: Double, y: Double)
+    
+    var point: CGPoint {
+        switch self {
+        case .topLeft:
+            return CGPoint(x: 0.0, y: 0.0)
+        case .topRight:
+            return CGPoint(x: 1.0, y: 0.0)
+        case .bottomLeft:
+            return CGPoint(x: 0.0, y: 1.0)
+        case .bottomRight:
+            return CGPoint(x: 1.0, y: 1.0)
+        case .center:
+            return CGPoint(x: 0.5, y: 0.5)
+        case .custom(let x, let y):
+            let clampedX = max(0.0, min(1.0, x))
+            let clampedY = max(0.0, min(1.0, y))
+            return CGPoint(x: clampedX, y: clampedY)
+        }
+    }
+}
+
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that reveals through polka dot pattern from a center point
-    /// - Parameters:
-    ///   - dots: Number of dots (default: 20.0)
-    ///   - center: Center point for the transition (default: (0.5, 0.5))
-    /// - Returns: A custom transition with polka dot curtain effect
     static func polkaDotsCurtain(
         dots: Double = 20.0,
-        center: CGPoint = CGPoint(x: 0.5, y: 0.5)
+        center: PolkaDotsCurtainCenter = .center
     ) -> AnyTransition {
         .modifier(
             active: PolkaDotsCurtainModifier(
                 progress: 0,
                 dots: dots,
-                center: center
+                center: center.point
             ),
             identity: PolkaDotsCurtainModifier(
                 progress: 1,
                 dots: dots,
-                center: center
+                center: center.point
             )
         )
     }
@@ -48,18 +71,13 @@ struct PolkaDotsCurtainModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == PolkaDotsCurtainTransition {
-    /// A transition that reveals through polka dot pattern from a center point
-    /// - Parameters:
-    ///   - dots: Number of dots (default: 20.0)
-    ///   - center: Center point for the transition (default: (0.5, 0.5))
-    /// - Returns: A custom transition with polka dot curtain effect
     static func polkaDotsCurtain(
         dots: Double = 20.0,
-        center: CGPoint = CGPoint(x: 0.5, y: 0.5)
+        center: PolkaDotsCurtainCenter = .center
     ) -> Self {
-        PolkaDotsCurtainTransition(dots: dots, center: center)
+        PolkaDotsCurtainTransition(dots: dots, center: center.point)
     }
 }
 

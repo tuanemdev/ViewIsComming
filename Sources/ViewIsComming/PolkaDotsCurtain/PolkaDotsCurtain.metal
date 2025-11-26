@@ -2,33 +2,24 @@
 #include <metal_stdlib>
 using namespace metal;
 
-// PolkaDotsCurtain transition
-// Adapted from: https://gl-transitions.com/editor/PolkaDotsCurtain
-// Author: bobylito
-// License: MIT
-
-[[ stitchable ]] half4 polkaDotsCurtain(float2 position,
-                                         SwiftUI::Layer layer,
-                                         float2 size,
-                                         float progress,
-                                         float dots,
-                                         float2 center) {
+[[ stitchable ]]
+half4 polkaDotsCurtain(float2 position,
+                       SwiftUI::Layer layer,
+                       float2 size,
+                       float progress,
+                       float dots,
+                       float2 center) {
     float2 uv = position / size;
-    
     // Calculate distance from each dot center
     float2 fractUV = fract(uv * dots);
     float distFromDotCenter = distance(fractUV, float2(0.5, 0.5));
-    
     // Distance from the specified center point
     float distFromCenter = distance(uv, center);
-    
-    // Check if we're inside a dot that should be revealed
-    // Dots appear based on progress and distance from center
-    bool nextImage = distFromDotCenter < (progress / distFromCenter);
-    
-    // If in next image, fade to transparent, otherwise show current
-    float mask = nextImage ? 0.0 : (1.0 - progress);
-    
+    // Check if this pixel should be visible based on dot pattern
+    // Dots reveal outward from center as progress increases
+    bool shouldReveal = distFromDotCenter < (progress / distFromCenter);
+    // Show view where dots should be revealed
+    float mask = shouldReveal ? 1.0 : 0.0;
     half4 color = layer.sample(position);
     return color * half(mask);
 }

@@ -2,21 +2,59 @@ import SwiftUI
 import ViewIsComming
 
 struct PolkaDotsCurtainView: View {
-    @State private var showView = true
+    @State private var showHaNoi = true
     @State private var dots: Double = 20.0
-    @State private var centerX: Double = 0.5
-    @State private var centerY: Double = 0.5
+    @State private var selectedCenter: CenterPreset = .center
+    @State private var customX: Double = 0.5
+    @State private var customY: Double = 0.5
+    
+    enum CenterPreset: String, CaseIterable {
+        case topLeft = "Top Left"
+        case topRight = "Top Right"
+        case bottomLeft = "Bottom Left"
+        case bottomRight = "Bottom Right"
+        case center = "Center"
+        case custom = "Custom"
+        
+        var polkaDotCenter: PolkaDotsCurtainCenter {
+            switch self {
+            case .topLeft: return .topLeft
+            case .topRight: return .topRight
+            case .bottomLeft: return .bottomLeft
+            case .bottomRight: return .bottomRight
+            case .center: return .center
+            case .custom: return .center // Will be overridden
+            }
+        }
+    }
+    
+    var centerPosition: PolkaDotsCurtainCenter {
+        if selectedCenter == .custom {
+            return .custom(x: customX, y: customY)
+        } else {
+            return selectedCenter.polkaDotCenter
+        }
+    }
     
     var body: some View {
         ScrollView {
             ZStack {
-                if showView {
+                if showHaNoi {
                     Image(.haNoi)
                         .resizable()
                         .transition(
-                            .polkaDotsCurtain(
-                                dots: dots,
-                                center: CGPoint(x: centerX, y: centerY)
+                            .asymmetric(
+                                insertion: .polkaDotsCurtain(dots: dots, center: centerPosition),
+                                removal: .none
+                            )
+                        )
+                } else {
+                    Image(.haLong)
+                        .resizable()
+                        .transition(
+                            .asymmetric(
+                                insertion: .polkaDotsCurtain(dots: dots, center: centerPosition),
+                                removal: .none
                             )
                         )
                 }
@@ -28,50 +66,41 @@ struct PolkaDotsCurtainView: View {
             VStack(alignment: .leading, spacing: 15) {
                 VStack(alignment: .leading) {
                     Text("Dots: \(Int(dots))")
-                        .font(.caption)
                     Slider(value: $dots, in: 5.0...50.0, step: 1.0)
                 }
                 
                 VStack(alignment: .leading) {
-                    Text("Center X: \(centerX, specifier: "%.2f")")
-                        .font(.caption)
-                    Slider(value: $centerX, in: 0.0...1.0)
+                    Text("Center Position")
+                    Picker("Center", selection: $selectedCenter) {
+                        ForEach(CenterPreset.allCases, id: \.self) { preset in
+                            Text(preset.rawValue).tag(preset)
+                        }
+                    }
+                    .pickerStyle(.menu)
                 }
                 
-                VStack(alignment: .leading) {
-                    Text("Center Y: \(centerY, specifier: "%.2f")")
-                        .font(.caption)
-                    Slider(value: $centerY, in: 0.0...1.0)
-                }
-                
-                HStack(spacing: 10) {
-                    Button("Center") {
-                        centerX = 0.5
-                        centerY = 0.5
-                        dots = 20.0
+                if selectedCenter == .custom {
+                    VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading) {
+                            Text("Custom X: \(customX, specifier: "%.2f")")
+                            Slider(value: $customX, in: 0.0...1.0)
+                        }
+                        VStack(alignment: .leading) {
+                            Text("Custom Y: \(customY, specifier: "%.2f")")
+                            Slider(value: $customY, in: 0.0...1.0)
+                        }
                     }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Top Left") {
-                        centerX = 0.0
-                        centerY = 0.0
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Bottom Right") {
-                        centerX = 1.0
-                        centerY = 1.0
-                    }
-                    .buttonStyle(.bordered)
+                    .padding(.top, 5)
                 }
             }
+            .font(.caption)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
-                    showView.toggle()
+                withAnimation(.easeInOut(duration: 1.0)) {
+                    showHaNoi.toggle()
                 }
             }) {
                 Text("Toggle Transition")

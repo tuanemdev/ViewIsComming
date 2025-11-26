@@ -232,11 +232,8 @@ struct ContentView: View {
                     Text("Polar Function")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("PolkaDotsCurtain") {
                     PolkaDotsCurtainView()
-                } label: {
-                    Text("PolkaDots Curtain")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     PowerKaleidoView()
