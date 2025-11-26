@@ -4,8 +4,8 @@ import ViewIsComming
 struct InvertedPageCurlView: View {
     @State private var showView = true
     // Controls
-    @State private var angle: Double = 135.0
-    @State private var radius: Double = 0.1
+    @State private var direction: InvertedPageCurlDirection = .rightToLeft
+    @State private var edge: InvertedPageCurlEdge = .top
     
     var body: some View {
         ScrollView {
@@ -13,66 +13,41 @@ struct InvertedPageCurlView: View {
                 if showView {
                     Image(.haNoi)
                         .resizable()
-                        .transition(
-                            .invertedPageCurl(
-                                angle: angle,
-                                radius: radius
-                            )
-                        )
+                        .transition(.invertedPageCurl(direction: direction, edge: edge))
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Controls
             VStack(alignment: .leading, spacing: 15) {
                 VStack(alignment: .leading) {
-                    Text("Angle: \(Int(angle))°")
+                    Text("Direction")
                         .font(.caption)
-                    Slider(value: $angle, in: 0...360, step: 15)
+                    Picker("Direction", selection: $direction) {
+                        Text("Right to Left").tag(InvertedPageCurlDirection.rightToLeft)
+                        Text("Left to Right").tag(InvertedPageCurlDirection.leftToRight)
+                    }
                 }
-                
                 VStack(alignment: .leading) {
-                    Text("Radius: \(radius, specifier: "%.2f")")
+                    Text("Edge")
                         .font(.caption)
-                    Slider(value: $radius, in: 0.01...0.5)
-                }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("↗️ 45°") {
-                        angle = 45.0
-                        radius = 0.1
+                    Picker("Edge", selection: $edge) {
+                        Text("Top").tag(InvertedPageCurlEdge.top)
+                        Text("Bottom").tag(InvertedPageCurlEdge.bottom)
                     }
-                    .buttonStyle(.bordered)
-                    
-                    Button("↘️ 135°") {
-                        angle = 135.0
-                        radius = 0.15
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("↙️ 225°") {
-                        angle = 225.0
-                        radius = 0.1
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("↖️ 315°") {
-                        angle = 315.0
-                        radius = 0.1
-                    }
-                    .buttonStyle(.bordered)
                 }
             }
+            .pickerStyle(.segmented)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             // Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 2.0)) {
                     showView.toggle()
                 }
             }) {

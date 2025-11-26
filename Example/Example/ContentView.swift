@@ -154,11 +154,8 @@ struct ContentView: View {
                     Text("Interference")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("InvertedPageCurl") {
                     InvertedPageCurlView()
-                } label: {
-                    Text("Inverted Page Curl")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     KaleidoscopeView()

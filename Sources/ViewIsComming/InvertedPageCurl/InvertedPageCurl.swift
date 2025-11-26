@@ -1,27 +1,31 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+public enum InvertedPageCurlDirection: Sendable {
+    case leftToRight
+    case rightToLeft
+}
+
+public enum InvertedPageCurlEdge: Sendable {
+    case top
+    case bottom
+}
+
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that creates an inverted page curl effect.
-    ///
-    /// - Parameters:
-    ///   - angle: Curl angle in degrees (0 to 360). Default is 135.
-    ///   - radius: Curl radius (0.0 to 1.0). Default is 0.1.
-    /// - Returns: A transition that creates an inverted page curl effect.
     static func invertedPageCurl(
-        angle: Double = 135.0,
-        radius: Double = 0.1
+        direction: InvertedPageCurlDirection = .rightToLeft,
+        edge: InvertedPageCurlEdge = .top
     ) -> AnyTransition {
         .modifier(
             active: InvertedPageCurlModifier(
                 progress: 0,
-                angle: angle,
-                radius: radius
+                direction: direction,
+                edge: edge
             ),
             identity: InvertedPageCurlModifier(
                 progress: 1,
-                angle: angle,
-                radius: radius
+                direction: direction,
+                edge: edge
             )
         )
     }
@@ -29,10 +33,13 @@ public extension AnyTransition {
 
 struct InvertedPageCurlModifier: ViewModifier {
     let progress: Double
-    let angle: Double
-    let radius: Double
+    let direction: InvertedPageCurlDirection
+    let edge: InvertedPageCurlEdge
     
     func body(content: Content) -> some View {
+        let directionValue = direction == .rightToLeft ? 1.0 : 0.0
+        let edgeValue = edge == .top ? 1.0 : 0.0
+        
         content
             .visualEffect { content, geometryProxy in
                 content
@@ -40,8 +47,8 @@ struct InvertedPageCurlModifier: ViewModifier {
                         ViewIsCommingShaderLibrary.invertedPageCurl(
                             .float2(geometryProxy.size),
                             .float(progress),
-                            .float(angle),
-                            .float(radius)
+                            .float(directionValue),
+                            .float(edgeValue)
                         ),
                         maxSampleOffset: .zero
                     )
@@ -49,30 +56,24 @@ struct InvertedPageCurlModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == InvertedPageCurlTransition {
-    /// A transition that creates an inverted page curl effect.
-    ///
-    /// - Parameters:
-    ///   - angle: Curl angle in degrees (0 to 360). Default is 135.
-    ///   - radius: Curl radius (0.0 to 1.0). Default is 0.1.
-    /// - Returns: A transition that creates an inverted page curl effect.
     static func invertedPageCurl(
-        angle: Double = 135.0,
-        radius: Double = 0.1
+        direction: InvertedPageCurlDirection = .rightToLeft,
+        edge: InvertedPageCurlEdge = .top
     ) -> Self {
-        InvertedPageCurlTransition(
-            angle: angle,
-            radius: radius
-        )
+        InvertedPageCurlTransition(direction: direction, edge: edge)
     }
 }
 
 public struct InvertedPageCurlTransition: Transition {
-    let angle: Double
-    let radius: Double
+    let direction: InvertedPageCurlDirection
+    let edge: InvertedPageCurlEdge
     
     public func body(content: Content, phase: TransitionPhase) -> some View {
+        let directionValue = direction == .rightToLeft ? 1.0 : 0.0
+        let edgeValue = edge == .top ? 1.0 : 0.0
+        
         content
             .visualEffect { content, geometryProxy in
                 content
@@ -80,8 +81,8 @@ public struct InvertedPageCurlTransition: Transition {
                         ViewIsCommingShaderLibrary.invertedPageCurl(
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0),
-                            .float(angle),
-                            .float(radius)
+                            .float(directionValue),
+                            .float(edgeValue)
                         ),
                         maxSampleOffset: .zero
                     )
