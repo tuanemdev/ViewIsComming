@@ -2,7 +2,7 @@ import SwiftUI
 import ViewIsComming
 
 struct UndulatingBurnOutView: View {
-    @State private var showView = true
+    @State private var showFirstImage: Bool = true
     // Controls
     @State private var smoothness: Double = 0.03
     @State private var centerX: Double = 0.5
@@ -11,13 +11,28 @@ struct UndulatingBurnOutView: View {
     var body: some View {
         ScrollView {
             ZStack {
-                if showView {
+                if showFirstImage {
                     Image(.haNoi)
                         .resizable()
                         .transition(
-                            .undulatingBurnOut(
-                                smoothness: smoothness,
-                                center: CGPoint(x: centerX, y: centerY)
+                            .asymmetric(
+                                insertion: .undulatingBurnOut(
+                                    smoothness: smoothness,
+                                    center: CGPoint(x: centerX, y: centerY)
+                                ),
+                                removal: .none
+                            )
+                        )
+                } else {
+                    Image(.haLong)
+                        .resizable()
+                        .transition(
+                            .asymmetric(
+                                insertion: .undulatingBurnOut(
+                                    smoothness: smoothness,
+                                    center: CGPoint(x: centerX, y: centerY)
+                                ),
+                                removal: .none
                             )
                         )
                 }
@@ -28,62 +43,33 @@ struct UndulatingBurnOutView: View {
             
             // Controls
             VStack(alignment: .leading, spacing: 15) {
-                // Smoothness slider
                 VStack(alignment: .leading) {
                     Text("Smoothness: \(smoothness, specifier: "%.3f")")
-                        .font(.caption)
-                    Slider(value: $smoothness, in: 0.01...0.1)
+                    Slider(value: $smoothness, in: 0.001...0.2)
                 }
                 
-                // Center X slider
                 VStack(alignment: .leading) {
                     Text("Center X: \(centerX, specifier: "%.2f")")
-                        .font(.caption)
                     Slider(value: $centerX, in: 0.0...1.0)
                 }
                 
-                // Center Y slider
                 VStack(alignment: .leading) {
                     Text("Center Y: \(centerY, specifier: "%.2f")")
-                        .font(.caption)
                     Slider(value: $centerY, in: 0.0...1.0)
                 }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Center") {
-                        smoothness = 0.03
-                        centerX = 0.5
-                        centerY = 0.5
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Top Left") {
-                        smoothness = 0.05
-                        centerX = 0.25
-                        centerY = 0.25
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Smooth") {
-                        smoothness = 0.08
-                        centerX = 0.5
-                        centerY = 0.5
-                    }
-                    .buttonStyle(.bordered)
-                }
             }
+            .font(.caption)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
-                    showView.toggle()
+                withAnimation(.linear(duration: 2.5)) {
+                    showFirstImage.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text("Switch Image")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)

@@ -397,11 +397,8 @@ struct ContentView: View {
                     Text("Twisted Scale")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("UndulatingBurnOut") {
                     UndulatingBurnOutView()
-                } label: {
-                    Text("Undulating Burn Out")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     VerticalOpenView()

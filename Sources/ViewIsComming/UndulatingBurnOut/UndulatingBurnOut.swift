@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func undulatingBurnOut(
         smoothness: Double = 0.03,
@@ -43,7 +43,7 @@ struct UndulatingBurnOutModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == UndulatingBurnOutTransition {
     static func undulatingBurnOut(
         smoothness: Double = 0.03,
