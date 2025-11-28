@@ -143,12 +143,6 @@ struct ContentView: View {
                         .foregroundColor(.red)
                 }
                 NavigationLink {
-                    HorizontalOpenView()
-                } label: {
-                    Text("Horizontal Open")
-                        .foregroundColor(.red)
-                }
-                NavigationLink {
                     InterferenceView()
                 } label: {
                     Text("Interference")
@@ -334,6 +328,9 @@ struct ContentView: View {
                     Text("Spiral")
                         .foregroundColor(.red)
                 }
+                NavigationLink("Split") {
+                    SplitView()
+                }
                 NavigationLink("SquaresWire") {
                     SquaresWireView()
                 }
@@ -386,25 +383,19 @@ struct ContentView: View {
                         .foregroundColor(.red)
                 }
                 NavigationLink {
-                    TVStaticView()
-                } label: {
-                    Text("TV Static")
-                        .foregroundColor(.red)
-                }
-                NavigationLink {
                     TwistedScaleView()
                 } label: {
                     Text("Twisted Scale")
                         .foregroundColor(.red)
                 }
+                NavigationLink {
+                    TVStaticView()
+                } label: {
+                    Text("TV Static")
+                        .foregroundColor(.red)
+                }
                 NavigationLink("UndulatingBurnOut") {
                     UndulatingBurnOutView()
-                }
-                NavigationLink {
-                    VerticalOpenView()
-                } label: {
-                    Text("Vertical Open")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     VHSView()

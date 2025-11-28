@@ -1,11 +1,12 @@
 import SwiftUI
 import ViewIsComming
 
-struct VerticalOpenView: View {
+struct SplitView: View {
     @State private var showView = true
     // Controls
+    @State private var axis: SplitAxis = .horizontal
+    @State private var direction: SplitDirection = .open
     @State private var smoothness: Double = 0.1
-    @State private var opening: Double = 1.0
     
     var body: some View {
         ScrollView {
@@ -13,12 +14,7 @@ struct VerticalOpenView: View {
                 if showView {
                     Image(.haNoi)
                         .resizable()
-                        .transition(
-                            .verticalOpen(
-                                smoothness: smoothness,
-                                opening: opening
-                            )
-                        )
+                        .transition(.split(axis: axis, direction: direction, smoothness: smoothness))
                 }
             }
             .frame(height: 300)
@@ -27,37 +23,33 @@ struct VerticalOpenView: View {
             
             // Controls
             VStack(alignment: .leading, spacing: 15) {
+                // Axis Picker
+                VStack(alignment: .leading) {
+                    Text("Axis")
+                        .font(.caption)
+                    Picker("Axis", selection: $axis) {
+                        Text("Horizontal").tag(SplitAxis.horizontal)
+                        Text("Vertical").tag(SplitAxis.vertical)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                
+                // Direction Picker
+                VStack(alignment: .leading) {
+                    Text("Direction")
+                        .font(.caption)
+                    Picker("Direction", selection: $direction) {
+                        Text("Open").tag(SplitDirection.open)
+                        Text("Close").tag(SplitDirection.close)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                
+                // Smoothness Slider
                 VStack(alignment: .leading) {
                     Text("Smoothness: \(smoothness, specifier: "%.2f")")
                         .font(.caption)
                     Slider(value: $smoothness, in: 0.01...0.5)
-                }
-                
-                VStack(alignment: .leading) {
-                    Text("Opening: \(opening, specifier: "%.1f")")
-                        .font(.caption)
-                    Slider(value: $opening, in: 0.1...2.0)
-                }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Sharp") {
-                        smoothness = 0.01
-                        opening = 1.0
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Default") {
-                        smoothness = 0.1
-                        opening = 1.0
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Wide") {
-                        smoothness = 0.3
-                        opening = 1.5
-                    }
-                    .buttonStyle(.bordered)
                 }
             }
             .padding()
@@ -66,7 +58,7 @@ struct VerticalOpenView: View {
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {
@@ -80,10 +72,10 @@ struct VerticalOpenView: View {
             }
         }
         .padding()
-        .navigationTitle("VerticalOpen")
+        .navigationTitle("Split")
     }
 }
 
 #Preview {
-    VerticalOpenView()
+    SplitView()
 }
