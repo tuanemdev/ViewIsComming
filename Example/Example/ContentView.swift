@@ -163,6 +163,9 @@ struct ContentView: View {
                     Text("Linear Blur")
                         .foregroundColor(.red)
                 }
+                NavigationLink("Luma") {
+                    LumaView()
+                }
                 NavigationLink {
                     LuminanceMeltView()
                 } label: {
