@@ -199,12 +199,6 @@ struct ContentView: View {
                     Text("Overexposure")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
-                    PageCurlView()
-                } label: {
-                    Text("Page Curl")
-                        .foregroundColor(.red)
-                }
                 NavigationLink("Perlin") {
                     PerlinView()
                 }
