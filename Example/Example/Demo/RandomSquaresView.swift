@@ -24,6 +24,7 @@ struct RandomSquaresView: View {
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
             // Controls
@@ -31,55 +32,27 @@ struct RandomSquaresView: View {
                 // Grid width slider
                 VStack(alignment: .leading) {
                     Text("Grid Width: \(Int(gridWidth))")
-                        .font(.caption)
                     Slider(value: $gridWidth, in: 5...30, step: 1)
                 }
-                
                 // Grid height slider
                 VStack(alignment: .leading) {
                     Text("Grid Height: \(Int(gridHeight))")
-                        .font(.caption)
                     Slider(value: $gridHeight, in: 5...30, step: 1)
                 }
-                
                 // Smoothness slider
                 VStack(alignment: .leading) {
                     Text("Smoothness: \(smoothness, specifier: "%.2f")")
-                        .font(.caption)
                     Slider(value: $smoothness, in: 0.0...1.0)
                 }
-                
-                // Preset buttons
-                HStack(spacing: 10) {
-                    Button("Fine Grid") {
-                        gridWidth = 20
-                        gridHeight = 20
-                        smoothness = 0.5
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Coarse Grid") {
-                        gridWidth = 5
-                        gridHeight = 5
-                        smoothness = 0.3
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button("Smooth") {
-                        gridWidth = 15
-                        gridHeight = 15
-                        smoothness = 0.8
-                    }
-                    .buttonStyle(.bordered)
-                }
             }
+            .font(.caption)
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
             
             // Single Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {

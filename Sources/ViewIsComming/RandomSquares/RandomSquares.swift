@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
     static func randomSquares(
         size: CGSize = CGSize(width: 10, height: 10),
@@ -43,7 +43,7 @@ struct RandomSquaresModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == RandomSquaresTransition {
     static func randomSquares(
         size: CGSize = CGSize(width: 10, height: 10),

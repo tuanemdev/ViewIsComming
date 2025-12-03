@@ -250,11 +250,8 @@ struct ContentView: View {
                     Text("Random Noise")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("RandomSquares") {
                     RandomSquaresView()
-                } label: {
-                    Text("Random Squares")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     RectangleView()
