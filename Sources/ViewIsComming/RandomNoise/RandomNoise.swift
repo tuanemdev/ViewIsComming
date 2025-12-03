@@ -1,26 +1,17 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
-    static func randomNoise(
-        density: Double = 50.0
-    ) -> AnyTransition {
+    static var randomNoise: AnyTransition {
         .modifier(
-            active: RandomNoiseModifier(
-                progress: 0,
-                density: density
-            ),
-            identity: RandomNoiseModifier(
-                progress: 1,
-                density: density
-            )
+            active: RandomNoiseModifier(progress: 0),
+            identity: RandomNoiseModifier(progress: 1)
         )
     }
 }
 
 struct RandomNoiseModifier: ViewModifier {
     let progress: Double
-    let density: Double
     
     func body(content: Content) -> some View {
         content
@@ -29,8 +20,7 @@ struct RandomNoiseModifier: ViewModifier {
                     .layerEffect(
                         ViewIsCommingShaderLibrary.randomNoise(
                             .float2(geometryProxy.size),
-                            .float(progress),
-                            .float(density)
+                            .float(progress)
                         ),
                         maxSampleOffset: .zero
                     )
@@ -38,18 +28,14 @@ struct RandomNoiseModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == RandomNoiseTransition {
-    static func randomNoise(
-        density: Double = 50.0
-    ) -> Self {
-        RandomNoiseTransition(density: density)
+    static var randomNoise: Self {
+        RandomNoiseTransition()
     }
 }
 
 public struct RandomNoiseTransition: Transition {
-    let density: Double
-    
     public func body(content: Content, phase: TransitionPhase) -> some View {
         content
             .visualEffect { content, geometryProxy in
@@ -57,8 +43,7 @@ public struct RandomNoiseTransition: Transition {
                     .layerEffect(
                         ViewIsCommingShaderLibrary.randomNoise(
                             .float2(geometryProxy.size),
-                            .float(phase.isIdentity ? 1 : 0),
-                            .float(density)
+                            .float(phase.isIdentity ? 1 : 0)
                         ),
                         maxSampleOffset: .zero
                     )

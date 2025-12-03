@@ -244,11 +244,8 @@ struct ContentView: View {
                     Text("Radial Blur")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("RandomNoise") {
                     RandomNoiseView()
-                } label: {
-                    Text("Random Noise")
-                        .foregroundColor(.red)
                 }
                 NavigationLink("RandomSquares") {
                     RandomSquaresView()
