@@ -193,12 +193,6 @@ struct ContentView: View {
                     Text("Multiply Blend")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
-                    OverexposureView()
-                } label: {
-                    Text("Overexposure")
-                        .foregroundColor(.red)
-                }
                 NavigationLink("Perlin") {
                     PerlinView()
                 }
