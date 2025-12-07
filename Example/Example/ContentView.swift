@@ -356,12 +356,6 @@ struct ContentView: View {
                         .foregroundColor(.red)
                 }
                 NavigationLink {
-                    TilesView()
-                } label: {
-                    Text("Tiles")
-                        .foregroundColor(.red)
-                }
-                NavigationLink {
                     TwistedScaleView()
                 } label: {
                     Text("Twisted Scale")
