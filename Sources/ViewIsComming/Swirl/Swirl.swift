@@ -1,9 +1,7 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that creates a swirling rotation effect from the center
-    /// - Returns: A custom transition with swirl distortion
     static var swirl: AnyTransition {
         .modifier(
             active: SwirlModifier(progress: 0),
@@ -24,16 +22,14 @@ struct SwirlModifier: ViewModifier {
                             .float2(geometryProxy.size),
                             .float(progress)
                         ),
-                        maxSampleOffset: CGSize(width: 50, height: 50)
+                        maxSampleOffset: .zero
                     )
             }
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == SwirlTransition {
-    /// A transition that creates a swirling rotation effect from the center
-    /// - Returns: A custom transition with swirl distortion
     static var swirl: Self {
         SwirlTransition()
     }
@@ -49,7 +45,7 @@ public struct SwirlTransition: Transition {
                             .float2(geometryProxy.size),
                             .float(phase.isIdentity ? 1 : 0)
                         ),
-                        maxSampleOffset: CGSize(width: 50, height: 50)
+                        maxSampleOffset: .zero
                     )
             }
     }

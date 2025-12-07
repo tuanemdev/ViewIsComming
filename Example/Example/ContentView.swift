@@ -346,11 +346,8 @@ struct ContentView: View {
                 NavigationLink("Swap") {
                     SwapView()
                 }
-                NavigationLink {
+                NavigationLink("Swirl") {
                     SwirlView()
-                } label: {
-                    Text("Swirl")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     TangentMotionBlurView()

@@ -2,36 +2,32 @@ import SwiftUI
 import ViewIsComming
 
 struct SwirlView: View {
-    @State private var showView = true
+    @State private var showFirstImage = true
     
     var body: some View {
         ScrollView {
             ZStack {
-                if showView {
+                if showFirstImage {
                     Image(.haNoi)
+                        .resizable()
+                        .transition(.swirl)
+                } else {
+                    Image(.haLong)
                         .resizable()
                         .transition(.swirl)
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
             
-            VStack(alignment: .leading, spacing: 15) {
-                Text("This transition creates a swirling rotation effect that's stronger near the center and fades toward the edges.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(15)
-            
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
-                    showView.toggle()
+                withAnimation(.easeInOut(duration: 1.0)) {
+                    showFirstImage.toggle()
                 }
             }) {
-                Text("Toggle Transition")
+                Text("Switch Image")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)

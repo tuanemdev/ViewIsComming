@@ -2,49 +2,34 @@
 #include <metal_stdlib>
 using namespace metal;
 
-// Swirl transition
-// Adapted from: https://gl-transitions.com/editor/Swirl
-// Author: Sergey Kosarevsky
-// License: MIT
-
-[[ stitchable ]] half4 swirl(float2 position,
-                              SwiftUI::Layer layer,
-                              float2 size,
-                              float progress) {
+[[ stitchable ]]
+half4 swirl(float2 position,
+            SwiftUI::Layer layer,
+            float2 size,
+            float progress) {
+    float radius = 1.0;
     float2 uv = position / size;
-    float2 center = float2(0.5, 0.5);
-    
-    // Calculate angle and distance from center
-    float2 dir = uv - center;
-    float dist = length(dir);
-    
-    // Swirl effect - rotate based on distance and progress
-    // The rotation is stronger near the center and decreases with distance
-    float angle = progress * 10.0 * (1.0 - dist);
-    
-    // Create rotation matrix
-    float cosA = cos(angle);
-    float sinA = sin(angle);
-    
-    // Apply rotation
-    float2 rotated;
-    rotated.x = dir.x * cosA - dir.y * sinA;
-    rotated.y = dir.x * sinA + dir.y * cosA;
-    
-    // New UV coordinates after rotation
-    float2 swirlUV = center + rotated;
-    
-    // Calculate position from UV
-    float2 swirlPos = swirlUV * size;
-    
-    // Ensure position is within bounds
-    swirlPos = clamp(swirlPos, float2(0.0), size);
-    
-    // Sample the layer at the swirled position
-    half4 color = layer.sample(swirlPos);
-    
-    // Calculate alpha mask - fade out as progress increases
-    float mask = 1.0 - smoothstep(0.0, 1.0, progress);
-    
+    // Center the UV coordinates
+    float2 centeredUV = uv - float2(0.5, 0.5);
+    float dist = length(centeredUV);
+    // Apply swirl effect within radius
+    if (dist < radius) {
+        float percent = (radius - dist) / radius;
+        // Swirl intensity: 0 at progress=0, max at progress=0.5, 0 at progress=1
+        // This creates the swirl-in and swirl-out effect
+        float a = (progress <= 0.5) ? mix(0.0, 1.0, progress / 0.5) : mix(1.0, 0.0, (progress - 0.5) / 0.5);
+        float theta = percent * percent * a * 8.0 * 3.14159;
+        float s = sin(theta);
+        float c = cos(theta);
+        centeredUV = float2(dot(centeredUV, float2(c, -s)), dot(centeredUV, float2(s, c)));
+    }
+    // Restore UV coordinates
+    centeredUV += float2(0.5, 0.5);
+    // Calculate sample position
+    float2 samplePos = centeredUV * size;
+    // Sample the layer
+    half4 color = layer.sample(samplePos);
+    // Mask: progress=0 -> hidden, progress=1 -> visible
+    float mask = progress;
     return color * half(mask);
 }
