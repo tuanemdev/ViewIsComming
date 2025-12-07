@@ -343,11 +343,8 @@ struct ContentView: View {
                     Text("Stereo Viewer")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("Swap") {
                     SwapView()
-                } label: {
-                    Text("Swap")
-                        .foregroundColor(.red)
                 }
                 NavigationLink {
                     SwirlView()

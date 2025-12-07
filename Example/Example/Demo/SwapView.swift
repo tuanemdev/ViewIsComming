@@ -5,8 +5,9 @@ struct SwapView: View {
     @State private var showView = true
     // Controls
     @State private var reflection: Double = 0.4
-    @State private var perspective: Double = 0.4
+    @State private var perspective: Double = 0.2
     @State private var depth: Double = 3.0
+    @State private var swapRight: Bool = true
     
     var body: some View {
         ScrollView {
@@ -15,16 +16,45 @@ struct SwapView: View {
                     Image(.haNoi)
                         .resizable()
                         .transition(
-                            .swap(
-                                reflection: reflection,
-                                perspective: perspective,
-                                depth: depth
+                            .asymmetric(
+                                insertion: .swap(
+                                    reflection: reflection,
+                                    perspective: perspective,
+                                    depth: depth,
+                                    swapRight: swapRight
+                                ),
+                                removal: .swap(
+                                    reflection: reflection,
+                                    perspective: perspective,
+                                    depth: depth,
+                                    swapRight: !swapRight
+                                )
+                            )
+                        )
+                } else {
+                    Image(.haLong)
+                        .resizable()
+                        .transition(
+                            .asymmetric(
+                                insertion: .swap(
+                                    reflection: reflection,
+                                    perspective: perspective,
+                                    depth: depth,
+                                    swapRight: swapRight
+                                ),
+                                removal: .swap(
+                                    reflection: reflection,
+                                    perspective: perspective,
+                                    depth: depth,
+                                    swapRight: !swapRight
+                                )
                             )
                         )
                 }
             }
             .frame(height: 300)
             .frame(maxWidth: .infinity)
+            .background(Color.black)
             .cornerRadius(20)
             
             // Controls
@@ -47,29 +77,23 @@ struct SwapView: View {
                     Slider(value: $depth, in: 0.5...10.0)
                 }
                 
+                Toggle("Swap Right", isOn: $swapRight)
+                    .font(.caption)
+                
                 // Preset buttons
                 HStack(spacing: 10) {
-                    Button("Subtle") {
-                        reflection = 0.2
-                        perspective = 0.2
-                        depth = 2.0
-                    }
-                    .buttonStyle(.bordered)
-                    
                     Button("Default") {
                         reflection = 0.4
-                        perspective = 0.4
+                        perspective = 0.2
                         depth = 3.0
                     }
-                    .buttonStyle(.bordered)
-                    
                     Button("Dramatic") {
                         reflection = 0.8
                         perspective = 1.5
                         depth = 8.0
                     }
-                    .buttonStyle(.bordered)
                 }
+                .buttonStyle(.bordered)
             }
             .padding()
             .background(Color.gray.opacity(0.1))
@@ -77,7 +101,7 @@ struct SwapView: View {
             
             // Trigger Button
             Button(action: {
-                withAnimation(.easeInOut(duration: 1.5)) {
+                withAnimation(.easeInOut(duration: 1.0)) {
                     showView.toggle()
                 }
             }) {

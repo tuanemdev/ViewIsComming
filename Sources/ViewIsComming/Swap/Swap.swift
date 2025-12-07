@@ -1,31 +1,27 @@
 import SwiftUI
 
-// MARK: - AnyTransition (Legacy support for iOS 16+)
+// MARK: - AnyTransition
 public extension AnyTransition {
-    /// A transition that swaps the view with a 3D flip effect.
-    ///
-    /// - Parameters:
-    ///   - reflection: Reflection strength in the middle (0.0 to 1.0). Default is 0.4.
-    ///   - perspective: Perspective strength (0.0 to 2.0). Default is 0.4.
-    ///   - depth: Depth of the 3D effect (0.0 to 2.0). Default is 3.0.
-    /// - Returns: A transition that creates a 3D flip swap effect.
     static func swap(
         reflection: Double = 0.4,
-        perspective: Double = 0.4,
-        depth: Double = 3.0
+        perspective: Double = 0.2,
+        depth: Double = 3.0,
+        swapRight: Bool = true
     ) -> AnyTransition {
         .modifier(
             active: SwapModifier(
                 progress: 0,
                 reflection: reflection,
                 perspective: perspective,
-                depth: depth
+                depth: depth,
+                swapRight: swapRight
             ),
             identity: SwapModifier(
                 progress: 1,
                 reflection: reflection,
                 perspective: perspective,
-                depth: depth
+                depth: depth,
+                swapRight: swapRight
             )
         )
     }
@@ -36,6 +32,7 @@ struct SwapModifier: ViewModifier {
     let reflection: Double
     let perspective: Double
     let depth: Double
+    let swapRight: Bool
     
     func body(content: Content) -> some View {
         content
@@ -47,7 +44,8 @@ struct SwapModifier: ViewModifier {
                             .float(progress),
                             .float(reflection),
                             .float(perspective),
-                            .float(depth)
+                            .float(depth),
+                            .float(swapRight ? 1.0 : 0.0)
                         ),
                         maxSampleOffset: .zero
                     )
@@ -55,24 +53,19 @@ struct SwapModifier: ViewModifier {
     }
 }
 
-// MARK: - Transition (iOS 17+)
+// MARK: - Transition
 public extension Transition where Self == SwapTransition {
-    /// A transition that swaps the view with a 3D flip effect.
-    ///
-    /// - Parameters:
-    ///   - reflection: Reflection strength in the middle (0.0 to 1.0). Default is 0.4.
-    ///   - perspective: Perspective strength (0.0 to 2.0). Default is 0.4.
-    ///   - depth: Depth of the 3D effect (0.0 to 2.0). Default is 3.0.
-    /// - Returns: A transition that creates a 3D flip swap effect.
     static func swap(
         reflection: Double = 0.4,
-        perspective: Double = 0.4,
-        depth: Double = 3.0
+        perspective: Double = 0.2,
+        depth: Double = 3.0,
+        swapRight: Bool = true
     ) -> Self {
         SwapTransition(
             reflection: reflection,
             perspective: perspective,
-            depth: depth
+            depth: depth,
+            swapRight: swapRight
         )
     }
 }
@@ -81,6 +74,7 @@ public struct SwapTransition: Transition {
     let reflection: Double
     let perspective: Double
     let depth: Double
+    let swapRight: Bool
     
     public func body(content: Content, phase: TransitionPhase) -> some View {
         content
@@ -92,7 +86,8 @@ public struct SwapTransition: Transition {
                             .float(phase.isIdentity ? 1 : 0),
                             .float(reflection),
                             .float(perspective),
-                            .float(depth)
+                            .float(depth),
+                            .float(swapRight ? 1.0 : 0.0)
                         ),
                         maxSampleOffset: .zero
                     )
