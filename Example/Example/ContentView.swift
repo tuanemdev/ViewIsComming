@@ -337,11 +337,8 @@ struct ContentView: View {
                     Text("Static Wipe")
                         .foregroundColor(.red)
                 }
-                NavigationLink {
+                NavigationLink("StereoViewer") {
                     StereoViewerView()
-                } label: {
-                    Text("Stereo Viewer")
-                        .foregroundColor(.red)
                 }
                 NavigationLink("Swap") {
                     SwapView()
